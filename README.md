@@ -1,3 +1,35 @@
+# Portfolio Generator
+
+Small React app to create single-file static HTML portfolios from form data.
+
+Quick start
+
+1. Install dependencies
+
+```bash
+npm install
+```
+
+2. Run dev server
+
+```bash
+npm start
+```
+
+3. Build for production
+
+```bash
+npm run build
+```
+
+Exported HTML
+
+Use the "Export HTML" button in the app preview to generate a single-file HTML using the form data.
+
+Notes
+
+- This repo uses Tailwind class names in components. I added `tailwindcss`, `postcss`, and `autoprefixer` as dev dependencies and created `tailwind.config.js` and `postcss.config.js`. If you see CSS lint warnings in your editor for `@tailwind` at-rules, the IDE linter may not be using PostCSS; the build will process Tailwind via CRA and PostCSS.
+- I added a minimal smoke test `src/App.test.js`. Run `npm test` to execute tests.
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
