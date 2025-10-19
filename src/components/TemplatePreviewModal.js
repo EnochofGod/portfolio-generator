@@ -1,13 +1,14 @@
 import React from 'react';
 import { X } from 'lucide-react';
 
-const TemplatePreviewModal = ({ isOpen, onClose, template }) => {
+const TemplatePreviewModal = ({ isOpen, onClose, template, generatedCode }) => {
   if (!isOpen) return null;
 
   const getTemplateDetails = () => {
     if (template === 'modern') {
       return {
         title: 'Modern Developer Portfolio',
+        subtitle: 'Modern Developer Portfolio Preview',
         features: [
           'Dynamic grid layout for projects and skills',
           'Dark mode optimized with accent gradients',
@@ -40,10 +41,18 @@ const TemplatePreviewModal = ({ isOpen, onClose, template }) => {
   const details = getTemplateDetails();
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl m-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-end sm:items-center justify-center">
+      {/* Slide-up animation styles scoped to this modal */}
+      <style>{`
+        @keyframes slideUp { from { transform: translateY(30%); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+        .modal-panel { animation: slideUp 360ms cubic-bezier(.2,.9,.2,1) both; }
+      `}</style>
+      <div className="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl m-4 modal-panel">
         <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{details.title}</h2>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{details.title}</h2>
+            {details.subtitle && <div className="text-sm text-gray-500">{details.subtitle}</div>}
+          </div>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
@@ -53,13 +62,23 @@ const TemplatePreviewModal = ({ isOpen, onClose, template }) => {
         </div>
         
         <div className="p-6">
-          {/* Large Preview */}
-          <div className="relative aspect-[16/10] mb-8 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
-            <img
-              src={details.image}
-              alt={`${details.title} Preview`}
-              className="w-full h-full object-cover"
-            />
+          {/* Large Preview: embed generated HTML when available, otherwise show image */}
+          <div className="relative aspect-[16/10] mb-8 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50">
+            {generatedCode ? (
+              <iframe
+                title={`${details.title} Live Preview`}
+                srcDoc={generatedCode}
+                className="w-full h-full"
+                style={{ border: 'none' }}
+                sandbox="allow-scripts allow-same-origin"
+              />
+            ) : (
+              <img
+                src={details.image}
+                alt={`${details.title} Preview`}
+                className="w-full h-full object-cover"
+              />
+            )}
           </div>
 
           {/* Features Grid */}

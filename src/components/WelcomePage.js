@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Layers, Sparkles, Star } from 'lucide-react';
 import TemplatePreviewModal from './TemplatePreviewModal';
+import generateStaticHtml from '../utils/generateStaticHtml';
 
-const WelcomePage = ({ setTemplate }) => {
+const WelcomePage = ({ setTemplate, data }) => {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
@@ -32,9 +33,9 @@ const WelcomePage = ({ setTemplate }) => {
       {/* Templates Section */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold text-white mb-8 text-center">Select Your Template</h2>
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+  <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* Modern Template */}
-          <div className="group relative bg-gray-800 p-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-700 hover:border-cyan-500">
+          <div className="group relative bg-gray-800 p-4 sm:p-5 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-700 hover:border-cyan-500">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative">
               <div className="flex items-center justify-between mb-3">
@@ -53,7 +54,7 @@ const WelcomePage = ({ setTemplate }) => {
                 </div>
 
                 <div 
-                  className="thumbnail w-full md:w-40 h-32 bg-gray-950 rounded-lg overflow-hidden relative shadow-lg group cursor-pointer"
+                  className="thumbnail w-full md:w-40 h-28 sm:h-36 md:h-32 bg-gray-950 rounded-lg overflow-hidden relative shadow-lg group cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     setPreviewTemplate('modern');
@@ -82,7 +83,7 @@ const WelcomePage = ({ setTemplate }) => {
           </div>
 
           {/* Classic Template */}
-          <div className="group relative bg-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-200 hover:border-blue-500">
+          <div className="group relative bg-white p-4 sm:p-5 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-200 hover:border-blue-500">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-600/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative">
               <div className="flex items-center justify-between mb-3">
@@ -101,7 +102,7 @@ const WelcomePage = ({ setTemplate }) => {
                 </div>
 
                 <div 
-                  className="thumbnail w-full md:w-40 h-32 bg-gray-50 rounded-lg overflow-hidden relative shadow-lg border border-gray-100 group cursor-pointer"
+                  className="thumbnail w-full md:w-40 h-28 sm:h-36 md:h-32 bg-gray-50 rounded-lg overflow-hidden relative shadow-lg border border-gray-100 group cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     setPreviewTemplate('classic');
@@ -130,11 +131,12 @@ const WelcomePage = ({ setTemplate }) => {
           </div>
         </div>
       </div>
-      {/* Preview Modal */}
+      {/* Preview Modal (live HTML preview embedded) */}
       <TemplatePreviewModal
         isOpen={!!previewTemplate}
         onClose={() => setPreviewTemplate(null)}
         template={previewTemplate}
+        generatedCode={previewTemplate && data ? generateStaticHtml({ ...data, template: previewTemplate }) : null}
       />
     </div>
   );

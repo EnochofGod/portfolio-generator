@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  ArrowLeft, Send, Github, Layers, Check, Zap, HardHat,
+  ArrowLeft, Send, Github, Layers, Check, Zap,
   MapPin, Globe, Twitter, Award, GraduationCap,
   Briefcase, Users, X
 } from 'lucide-react';
@@ -85,8 +85,8 @@ const ConfigForm = ({ data, setData, setView }) => {
             cvFileSize: file.size 
           } 
         });
-        // Show message about auto-fill availability
-        alert('CV uploaded successfully! Click "Auto-Fill Data from CV" to populate the form with your information.\n\nNote: Currently using example data with your name. Full CV parsing coming soon!');
+  // Show simple success message
+  alert('CV uploaded successfully!');
       };
       reader.readAsDataURL(file);
     }
@@ -235,36 +235,7 @@ const ConfigForm = ({ data, setData, setView }) => {
     setFormData({ ...formData, experience: newExp });
   };
 
-  const handleAutoFillFromCV = () => {
-    if (!formData.personal.cvFile) {
-      return alert('Please upload a CV file (PDF/DOCX) first.');
-    }
-
-    // Extract name from filename
-    const fileName = formData.personal.cvFileName.toLowerCase();
-    const nameParts = fileName.split('.')[0].split(' ').filter(part => 
-      !['cv', 'resume', 'curriculum', 'vitae'].includes(part.toLowerCase())
-    );
-    
-    const fullName = nameParts.map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    ).join(' ');
-
-    // Clear the form with just the name from the CV file
-    setFormData({
-      ...initializedData,
-      personal: {
-        ...initializedData.personal,
-        fullName,
-        cvFile: formData.personal.cvFile,
-        cvFileName: formData.personal.cvFileName,
-        cvFileSize: formData.personal.cvFileSize
-      }
-    });
-    
-    alert('Ready to fill in your information. The form has been cleared for you to input your details.');
-  };
-
+  // Quick-fill/auto-fill removed. Proceed with regular submit handler.
   const handleSubmit = (e) => { e.preventDefault(); setData(formData); setView('preview'); };
 
   return (
@@ -297,37 +268,20 @@ const ConfigForm = ({ data, setData, setView }) => {
           </div>
         </div>
         <div className="bg-blue-50 p-6 rounded-2xl shadow-inner border border-blue-200">
-          <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center"><Zap className="w-6 h-6 mr-2" /> Resume Upload & Quick-Fill</h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">CV/Resume File (PDF/DOCX)</label>
-              <input type="file" accept=".pdf,.docx" onChange={handleCVUpload} className="w-full p-3 border border-gray-300 rounded-lg" />
-              {formData.personal.cvFileName && (
-                <div className="mt-2">
-                  <p className="text-sm text-green-600 flex items-center">
-                    <Check className="w-4 h-4 mr-1" /> {formData.personal.cvFileName}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    File uploaded successfully! Click the Auto-Fill button to continue.
-                  </p>
-                </div>
-              )}
-            </div>
-            <div className="mt-7">
-              <button 
-                type="button" 
-                onClick={handleAutoFillFromCV} 
-                disabled={!formData.personal.cvFile}
-                className={`w-full py-3 rounded-lg transition-all duration-200 flex items-center justify-center ${
-                  formData.personal.cvFile 
-                    ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg animate-pulse' 
-                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                <HardHat className={`w-5 h-5 mr-2 ${formData.personal.cvFile ? 'animate-bounce' : ''}`} />
-                {formData.personal.cvFile ? 'Click to Auto-Fill from CV!' : 'Upload a CV first'}
-              </button>
-            </div>
+          <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center"><Zap className="w-6 h-6 mr-2" /> Resume Upload</h3>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">CV/Resume File (PDF/DOCX)</label>
+            <input type="file" accept=".pdf,.docx" onChange={handleCVUpload} className="w-full p-3 border border-gray-300 rounded-lg" />
+            {formData.personal.cvFileName && (
+              <div className="mt-2">
+                <p className="text-sm text-green-600 flex items-center">
+                  <Check className="w-4 h-4 mr-1" /> {formData.personal.cvFileName}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  File uploaded successfully!
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -727,6 +681,6 @@ const ConfigForm = ({ data, setData, setView }) => {
       </form>
     </div>
   );
-};
+}
 
 export default ConfigForm;

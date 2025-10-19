@@ -65,10 +65,22 @@ const GlobalScriptsAndStyles = () => {
     `;
     injectElement('print-styles', printStyles);
 
-    // 5) Minimal base styles
+    // 5) Minimal base styles (improved)
     const baseStyles = document.createElement('style');
     baseStyles.textContent = `
-      body { margin: 0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+      :root {
+        --bg-00: #0f172a;
+        --bg-10: #0b1220;
+        --card: rgba(255,255,255,0.04);
+        --muted: #9ca3af;
+        --accent: #06b6d4;
+        --accent-2: #0891b2;
+      }
+      html, body { overflow-x: hidden; }
+      body { margin: 0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+      .app-container { min-height: 100vh; -webkit-font-smoothing:antialiased; }
+      /* small utility for smoother shadows used by components */
+      .soft-shadow { box-shadow: 0 6px 24px rgba(2,6,23,0.08); }
     `;
     injectElement('base-styles', baseStyles);
 

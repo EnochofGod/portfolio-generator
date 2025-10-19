@@ -162,27 +162,108 @@ const generateStaticHtml = (data) => {
           background: #0ea5e9;
           color: #fff;
         }
+        /* Theme toggle - circular bottom-right button for better reachability */
         .theme-toggle {
           position: fixed;
-          top: 1rem;
+          bottom: 1rem;
           right: 1rem;
-          padding: 0.5rem;
-          border-radius: 0.5rem;
+          top: auto;
+          width: 48px;
+          height: 48px;
+          padding: 0;
+          border-radius: 50%;
           cursor: pointer;
-          z-index: 100;
+          z-index: 120;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 6px 18px rgba(2,6,23,0.12);
+          border: none;
+          transition: transform 180ms ease, background 180ms ease;
         }
+        .theme-toggle:active { transform: translateY(1px); }
         .modern-template[data-theme="dark"] .theme-toggle {
-          background: #374151;
+          background: linear-gradient(180deg,#1f2937,#111827);
           color: #e5e7eb;
         }
         .modern-template[data-theme="light"] .theme-toggle {
-          background: #e5e7eb;
-          color: #374151;
+          background: linear-gradient(180deg,#ffffff,#f8fafc);
+          color: #111827;
+        }
+
+        /* Ensure images scale on small screens and don't force horizontal scroll */
+        .modern-template img, .modern-template svg { max-width: 100%; height: auto; display: block; }
+
+        /* Navigation responsive tweaks */
+        .portfolio-nav { display:flex; align-items:center; gap:1rem; }
+        .portfolio-nav .links { display:flex; gap:1rem; }
+        @media (max-width: 768px) {
+          .portfolio-nav .links { display: none; }
+          .portfolio-nav .mobile-toggle { display: inline-flex; }
         }
       </style>
-      <button class="theme-toggle" onclick="document.querySelector('.modern-template').dataset.theme = document.querySelector('.modern-template').dataset.theme === 'dark' ? 'light' : 'dark'">
-        Toggle Theme
+      <!-- Theme toggle button (bottom-right) -->
+      <button id="themeToggleBtn" class="theme-toggle" aria-label="Toggle theme" style="bottom:1rem; right:1rem; top:auto;">
+        <!-- default: moon icon for dark -->
+        <svg id="themeIconMoon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+        <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
       </button>
+      <script>
+        (function(){
+          const root = document.querySelector('.modern-template');
+          const btn = document.getElementById('themeToggleBtn');
+          const iconSun = document.getElementById('themeIconSun');
+          const iconMoon = document.getElementById('themeIconMoon');
+          function updateIcons() {
+            const isDark = root && root.dataset.theme === 'dark';
+            if (iconSun && iconMoon) {
+              iconSun.style.display = isDark ? 'none' : 'inline';
+              iconMoon.style.display = isDark ? 'inline' : 'none';
+            }
+          }
+          btn && btn.addEventListener('click', function(){
+            if (!root) return;
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            updateIcons();
+          });
+          // initialize
+          updateIcons();
+        })();
+      </script>
+      <script>
+        // Sidebar toggle for classic template (toggle container-level state)
+        (function(){
+          try {
+            const container = document.querySelector('.container');
+            if (!container) return;
+            const toggle = document.createElement('button');
+            toggle.className = 'classic-sidebar-toggle';
+            toggle.setAttribute('aria-label', 'Toggle sidebar');
+            toggle.innerText = '☰';
+            toggle.addEventListener('click', function(){
+              container.classList.toggle('sidebar-collapsed');
+            });
+            document.body.appendChild(toggle);
+          } catch(e) {
+            // ignore
+          }
+        })();
+
+        // Mobile menu wiring for modern template
+        (function(){
+          try {
+            document.querySelectorAll('.burger-menu').forEach(function(b){
+              b.addEventListener('click', function(){
+                const nav = document.querySelector('.mobile-nav');
+                if (nav) nav.classList.toggle('active');
+              });
+            });
+          } catch(e){}
+        })();
+
+        // Prevent horizontal overflow
+        (function(){ document.documentElement.style.overflowX = 'hidden'; document.body.style.overflowX = 'hidden'; })();
+      </script>
       <style>
         /* Mobile Navigation Styles */
         .burger-menu {
@@ -291,19 +372,18 @@ const generateStaticHtml = (data) => {
           }
         }
       </style>
+      <nav class="portfolio-nav" style="width:100%;background:#0e172a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem 1rem 2rem;position:sticky;top:0;z-index:100;">
+        <div style="display:flex;gap:1.5rem;">
+          <a href="#hero" style="color:#fff;text-decoration:none;font-size:1rem;">Home</a>
+          <a href="#about" style="color:#fff;text-decoration:none;font-size:1rem;">About</a>
+          <a href="#skills" style="color:#fff;text-decoration:none;font-size:1rem;">Skills</a>
+          <a href="#experience" style="color:#fff;text-decoration:none;font-size:1rem;">Experience</a>
+          <a href="#projects" style="color:#fff;text-decoration:none;font-size:1rem;">Projects</a>
+          <a href="#contact" style="color:#fff;text-decoration:none;font-size:1rem;">Contact</a>
+        </div>
+      </nav>
       <div class="container">
-        <header class="py-6 px-4 flex items-center justify-between relative">
-          <h1 class="text-4xl font-bold">${personal.fullName}</h1>
-          
-          <!-- Desktop Navigation -->
-          <nav class="desktop-nav">
-            <div class="contact-links flex items-center flex-wrap gap-4 sm:gap-6">
-              ${personal.github ? `<a href="${personal.github}" target="_blank" class="nav-link hover:text-blue-400 transition-colors px-3 py-2 rounded-lg">GitHub</a>` : ''}
-              ${personal.linkedin ? `<a href="${personal.linkedin}" target="_blank" class="nav-link hover:text-blue-400 transition-colors px-3 py-2 rounded-lg">LinkedIn</a>` : ''}
-              ${personal.email ? `<a href="mailto:${personal.email}" class="nav-link hover:text-blue-400 transition-colors px-3 py-2 rounded-lg">Email</a>` : ''}
-              ${personal.website ? `<a href="${personal.website}" target="_blank" class="nav-link hover:text-blue-400 transition-colors px-3 py-2 rounded-lg">Website</a>` : ''}
-            </div>
-          </nav>
+        <!-- ...existing code... -->
 
           <!-- Mobile Burger Menu -->
           <button class="burger-menu" onclick="this.classList.toggle('active'); document.querySelector('.mobile-nav').classList.toggle('active')">
@@ -321,28 +401,38 @@ const generateStaticHtml = (data) => {
                 </svg>
               </button>
             </div>
-            <div class="contact-links">
-              ${personal.github ? `<a href="${personal.github}" target="_blank">GitHub</a>` : ''}
-              ${personal.linkedin ? `<a href="${personal.linkedin}" target="_blank">LinkedIn</a>` : ''}
-              ${personal.email ? `<a href="mailto:${personal.email}">Email</a>` : ''}
-              ${personal.website ? `<a href="${personal.website}" target="_blank">Website</a>` : ''}
+            <div class="mobile-section-links" style="display:flex;flex-direction:column;gap:1rem;">
+              <a href="#hero" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Home</a>
+              <a href="#about" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">About</a>
+              <a href="#skills" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Skills</a>
+              <a href="#experience" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Experience</a>
+              <a href="#projects" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Projects</a>
+              <a href="#contact" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Contact</a>
+
             </div>
           </nav>
         </header>
         <main>
-          <section class="hero-section">
+          <section id="hero" class="hero-section">
             <div class="profile-image">
-              <img src="${personal.profileImage}" alt="profile" style="width:180px;height:180px;border-radius:1rem;object-fit:cover" onerror="this.onerror=null;this.src='https://placehold.co/180x180/6b7280/ffffff?text=${getInitialsLogo(personal.fullName)}'" />
-              ${cvButtonHtml}
+              <img src="${personal.profileImage}" alt="profile" style="width:180px;height:180px;border-radius:50%;object-fit:cover" onerror="this.onerror=null;this.src='https://placehold.co/180x180/6b7280/ffffff?text=${getInitialsLogo(personal.fullName)}'" />
             </div>
             <div>
               <h2 class="text-2xl font-bold mb-2">${personal.title}</h2>
               <p class="text-lg opacity-90 mb-4">${personal.tagline}</p>
-              <p class="opacity-75">${(personal.about || '').replace(/\n/g, '<br/>')}</p>
+              <p class="opacity-75">${personal.tagline ? personal.tagline : ''}</p>
             </div>
           </section>
           
-          <section class="skills-section mt-12">
+          <!-- About section (anchor target) -->
+          <section id="about" class="about-section py-6">
+            <div class="max-w-5xl mx-auto">
+              <h3 class="text-2xl font-bold mb-4">About</h3>
+              <p class="text-cyan-100">${(personal.about || '').replace(/\n/g, '<br/>')}</p>
+            </div>
+          </section>
+          
+          <section id="skills" class="skills-section mt-12">
             <h3 class="text-2xl font-bold mb-6">Skills & Expertise</h3>
             <div class="skills-grid">
               <div class="skill-category">
@@ -374,7 +464,7 @@ const generateStaticHtml = (data) => {
             </section>
           ` : ''}
 
-          <section class="experience-section mt-12">
+          <section id="experience" class="experience-section mt-12">
             <h3 class="text-2xl font-bold mb-6">Experience</h3>
             <div class="space-y-8">
               ${experience.map(e => `
@@ -393,7 +483,7 @@ const generateStaticHtml = (data) => {
             </div>
           </section>
 
-          <section class="projects-section mt-8 sm:mt-12">
+          <section id="projects" class="projects-section mt-8 sm:mt-12">
             <h3 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Key Projects</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               ${projects.map(p => `
@@ -409,10 +499,25 @@ const generateStaticHtml = (data) => {
               `).join('')}
             </div>
           </section>
+
+          <!-- Contact section -->
+          <section id="contact" class="contact-section mt-8 py-8 bg-white text-gray-900">
+            <div class="max-w-5xl mx-auto">
+              <h3 class="text-2xl font-bold mb-4">Contact</h3>
+              <div class="space-y-2 text-gray-700">
+                ${personal.email ? `<div>Email: <a href="mailto:${personal.email}" class="text-cyan-600">${personal.email}</a></div>` : ''}
+                ${personal.phone ? `<div>Phone: ${personal.phone}</div>` : ''}
+                ${personal.location ? `<div>Location: ${personal.location}</div>` : ''}
+              </div>
+            </div>
+          </section>
         </main>
       </div>
     </div>
   `;
+
+  // small script added to allow parent window to postMessage navigation commands
+  // it will be appended to both modern and classic render outputs where appropriate
 
   const renderClassicTemplate = () => `
     <div class="classic-template" id="classic-portfolio" data-theme="dark">
@@ -467,6 +572,35 @@ const generateStaticHtml = (data) => {
           height: 100vh;
           overflow-y: auto;
         }
+
+        /* Collapsible sidebar support - container-level state so main shifts correctly */
+        .container.sidebar-collapsed .classic-sidebar {
+          transform: translateX(-100%);
+          transition: transform 220ms ease;
+        }
+
+        .container.sidebar-collapsed .classic-main {
+          margin-left: 0 !important;
+          max-width: 100% !important;
+          transition: margin-left 220ms ease;
+        }
+
+        .classic-sidebar-toggle {
+          position: fixed;
+          left: 1rem;
+          top: 1rem;
+          z-index: 220;
+          background: var(--accent-color);
+          color: #fff;
+          border: none;
+          padding: 0.5rem 0.6rem;
+          border-radius: 0.45rem;
+          box-shadow: 0 6px 18px rgba(2,6,23,0.12);
+          cursor: pointer;
+        }
+
+        /* Prevent long words or links from creating horizontal scroll */
+        .classic-main, .classic-sidebar, .classic-template { word-wrap: break-word; overflow-wrap: anywhere; }
 
         .classic-sidebar .profile-image {
           width: 180px;
@@ -595,6 +729,7 @@ const generateStaticHtml = (data) => {
             width: 100%;
             height: auto;
             padding: 1.5rem;
+            transform: none !important;
           }
 
           .classic-main {
@@ -903,28 +1038,28 @@ const generateStaticHtml = (data) => {
         }
         
         /* Print Styles */
-        @media print {
-          .classic-template {
-            --accent-color: #2563eb !important;
-            --accent-light: #dbeafe !important;
-          }
+        // @media print {
+        //   .classic-template {
+        //     --accent-color: #2563eb !important;
+        //     --accent-light: #dbeafe !important;
+        //   }
           
-          .classic-sidebar {
-            position: relative !important;
-            height: auto !important;
-            width: 100% !important;
-            page-break-inside: avoid !important;
-          }
+        //   .classic-sidebar {
+        //     position: relative !important;
+        //     height: auto !important;
+        //     width: 100% !important;
+        //     page-break-inside: avoid !important;
+        //   }
           
-          .classic-main {
-            margin-left: 0 !important;
-            max-width: 100% !important;
-          }
+        //   .classic-main {
+        //     margin-left: 0 !important;
+        //     max-width: 100% !important;
+        //   }
           
-          .container {
-            display: block !important;
-          }
-        }
+        //   .container {
+        //     display: block !important;
+        //   }
+        // }
         
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -1004,6 +1139,15 @@ const generateStaticHtml = (data) => {
                onerror="this.onerror=null;this.src=\`https://placehold.co/180x180/2563eb/ffffff?text=${getInitialsLogo(personal.fullName)}\`"/>
           
           <h1>${personal.fullName}</h1>
+          <!-- Sidebar section navigation -->
+          <nav class="sidebar-nav" style="margin:1rem 0 1.5rem; display:flex; flex-direction:column; gap:0.5rem;">
+            <a href="#hero" style="color:var(--text-secondary); text-decoration:none;">Home</a>
+            <a href="#about" style="color:var(--text-secondary); text-decoration:none;">About</a>
+            <a href="#skills" style="color:var(--text-secondary); text-decoration:none;">Skills</a>
+            <a href="#experience" style="color:var(--text-secondary); text-decoration:none;">Experience</a>
+            <a href="#projects" style="color:var(--text-secondary); text-decoration:none;">Projects</a>
+            <a href="#contact" style="color:var(--text-secondary); text-decoration:none;">Contact</a>
+          </nav>
           <div class="title">${personal.title}</div>
           <p class="tagline">${personal.tagline}</p>
 
@@ -1051,21 +1195,13 @@ const generateStaticHtml = (data) => {
             ${cvButtonHtml}
           </div>
 
-          ${skills.technical.length || skills.soft.length ? `
-          <div class="section">
-            <h3>Core Skills</h3>
-            <div class="skills-list">
-              ${skills.technical.map(skill => `<span class="tag">${skill}</span>`).join('')}
-            </div>
-          </div>` : ''}
+          <div class="classic-footer">
+            <p>&copy; ${new Date().getFullYear()} ${personal.name}. All rights reserved.</p>
+          </div>
         </aside>
 
         <!-- Main Content -->
         <main class="classic-main">
-          <div class="section">
-            <h2>About Me</h2>
-            <div class="description">${personal.about}</div>
-          </div>
 
           ${experience.length ? `
           <div class="section">
@@ -1101,20 +1237,50 @@ const generateStaticHtml = (data) => {
               `).join('')}
             </div>
           </div>` : ''}
-
-          ${personal.cvFile ? `
-          <div class="section">
-            <a href="${personal.cvFile}" download="${personal.cvFileName || 'resume.pdf'}" class="contact-item" style="display: inline-flex !important;">
-              <i data-feather="download"></i> Download Full CV
-            </a>
-          </div>` : ''}
         </main>
       </div>
-        /* These duplicate styles are removed as they are defined above */
+       
       </style>
-      <button class="theme-toggle-btn" onclick="this.closest('.classic-template').dataset.theme = this.closest('.classic-template').dataset.theme === 'dark' ? 'light' : 'dark'">
-        Toggle Theme
+      <!-- Theme toggle button (bottom-right) -->
+      <button id="classicThemeToggleBtn" aria-label="Toggle theme" style="position:fixed;bottom:1.5rem;right:1.5rem;width:48px;height:48px;border-radius:50%;background:#374151;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.12);border:none;z-index:200;cursor:pointer;">
+        <svg id="classicThemeIconMoon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+        <svg id="classicThemeIconSun" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
       </button>
+      <script>
+        (function(){
+          const root = document.querySelector('.classic-template');
+          const btn = document.getElementById('classicThemeToggleBtn');
+          const iconSun = document.getElementById('classicThemeIconSun');
+          const iconMoon = document.getElementById('classicThemeIconMoon');
+          function updateIcons() {
+            const isDark = root && root.dataset.theme === 'dark';
+            if (iconSun && iconMoon) {
+              iconSun.style.display = isDark ? 'none' : 'inline';
+              iconMoon.style.display = isDark ? 'inline' : 'none';
+            }
+          }
+          btn && btn.addEventListener('click', function(){
+            if (!root) return;
+            root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+            updateIcons();
+          });
+          // initialize
+          updateIcons();
+        })();
+        // Smooth scroll for nav links
+        document.addEventListener('DOMContentLoaded', function() {
+          document.querySelectorAll('.sidebar-nav a').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+              const targetId = link.getAttribute('href').replace('#','');
+              const target = document.getElementById(targetId);
+              if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+              }
+            });
+          });
+        });
+      </script>
       <div class="container">
           <aside class="classic-sidebar">
             <img src="${personal.profileImage}" 
@@ -1158,12 +1324,13 @@ const generateStaticHtml = (data) => {
           </aside>
 
           <main class="classic-main">
-            <div class="classic-section">
+            <div id="hero" style="height:1px; margin-top:-80px; visibility:hidden;"></div>
+            <div id="about" class="classic-section">
               <h1>About Me</h1>
               <p>${(personal.about || '').replace(/\n/g, '<br/>')}</p>
             </div>
 
-            <div class="classic-section">
+            <div id="experience" class="classic-section">
               <h3>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                 Professional Experience
@@ -1185,7 +1352,7 @@ const generateStaticHtml = (data) => {
               </div>
             </div>
 
-            <div class="classic-section">
+            <div id="projects" class="classic-section">
               <h3>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                 Skills & Expertise
@@ -1244,6 +1411,29 @@ const generateStaticHtml = (data) => {
     </div>
   `;
 
+  // Helper to inject a small navigation listener script into the produced HTML
+  const navigationListenerScript = `
+    <script>
+      (function(){
+        // Listen for navigation messages from parent
+        window.addEventListener('message', function(e){
+          try {
+            const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+            if (!data || data.type !== 'navigate' || !data.id) return;
+            var target = document.getElementById(data.id) || document.querySelector('[name="'+data.id+'"]');
+            if (target && typeof target.scrollIntoView === 'function') {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else if (data.id === 'hero') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          } catch (err) {
+            // ignore
+          }
+        }, false);
+      })();
+    </script>
+  `;
+
   // Validate and determine which template to use
   if (template !== 'modern' && template !== 'classic') {
     console.error('Invalid template selected:', template);
@@ -1251,7 +1441,7 @@ const generateStaticHtml = (data) => {
   }
   
   // Select and render the appropriate template
-  const templateContent = template === 'modern' ? renderModernTemplate() : renderClassicTemplate();
+  const templateContent = (template === 'modern' ? renderModernTemplate() : renderClassicTemplate()) + navigationListenerScript;
 
   return `<!DOCTYPE html>
 <html lang="en">

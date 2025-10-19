@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ArrowLeft, Layers, Code } from 'lucide-react';
 import useActiveSection from '../hooks/useActiveSection';
 import generateStaticHtml from '../utils/generateStaticHtml';
@@ -9,6 +9,8 @@ const PortfolioPreview = ({ data, setView }) => {
 
   const sections = ['home', 'about', 'skills', 'experience', 'projects', 'contact'];
   const [showExportModal, setShowExportModal] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const iframeRef = useRef(null);
   // All hooks must be called before any conditionals
   useActiveSection(sections);
 
@@ -31,6 +33,19 @@ const PortfolioPreview = ({ data, setView }) => {
   const getAnchorId = (id) => (id === 'home' ? 'hero' : id);
 
   const generatedCode = generateStaticHtml(data);
+
+  const postNavigateMessage = (id) => {
+    const anchor = getAnchorId(id);
+    // iframe may be same-origin since we're using srcDoc; postMessage with structured data
+    try {
+      const iframe = iframeRef.current;
+      if (!iframe) return;
+      // post as stringified JSON for robustness
+      iframe.contentWindow.postMessage(JSON.stringify({ type: 'navigate', id: anchor }), '*');
+    } catch (err) {
+      console.error('Failed to post navigate message to iframe', err);
+    }
+  };
   
 
   // Open the generated HTML in a new tab (blob URL) so users can inspect the export directly
@@ -55,7 +70,7 @@ const PortfolioPreview = ({ data, setView }) => {
 
   if (template === 'classic') {
     return (
-      <div className="min-h-screen bg-gray-50 text-gray-900">
+      <div className="min-h-screen bg-gray-50 text-gray-900 overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -69,6 +84,9 @@ const PortfolioPreview = ({ data, setView }) => {
               <button onClick={() => setShowExportModal(true)} className="flex items-center text-sm font-semibold px-3 py-2 rounded-lg bg-green-600 text-white">
                 <Code className="w-4 h-4 mr-2" /> Export HTML
               </button>
+              <button onClick={openGeneratedHtmlInNewTab} className="flex items-center text-sm font-semibold px-3 py-2 rounded-lg bg-indigo-600 text-white">
+                <Layers className="w-4 h-4 mr-2" /> Open Preview
+              </button>
             </div>
           </div>
 
@@ -77,7 +95,7 @@ const PortfolioPreview = ({ data, setView }) => {
             <iframe
               title="Classic Template Export Preview"
               srcDoc={generatedCode}
-              className="w-full h-[80vh]"
+              className="w-full h-[70vh] md:h-[80vh] lg:h-[90vh]"
               style={{ border: 'none' }}
               sandbox="allow-scripts allow-same-origin"
             />
@@ -95,10 +113,21 @@ const PortfolioPreview = ({ data, setView }) => {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <span className={`text-xl font-extrabold ${isModern ? 'text-cyan-400' : 'text-blue-600'}`}>{personal.fullName}</span>
 
-          <div className="flex space-x-6 text-sm font-medium">
+          <div className="hidden sm:flex space-x-6 text-sm font-medium">
             {sections.map((id) => (
-              <a key={id} href={`#${getAnchorId(id)}`} className="py-1 px-3 rounded-lg font-medium transition duration-200 text-blue-200 hover:text-white hover:bg-blue-700">{id.charAt(0).toUpperCase() + id.slice(1)}</a>
+              <button key={id} onClick={() => postNavigateMessage(id)} className="py-1 px-3 rounded-lg font-medium transition duration-200 text-blue-200 hover:text-white hover:bg-blue-700">{id.charAt(0).toUpperCase() + id.slice(1)}</button>
             ))}
+          </div>
+
+          {/* Mobile nav button */}
+          <div className="sm:hidden">
+            <button
+              onClick={() => setMobileNavOpen((s) => !s)}
+              aria-label="Toggle navigation"
+              className="p-2 rounded-md bg-gray-700 text-white"
+            >
+              {mobileNavOpen ? 'Close' : 'Menu'}
+            </button>
           </div>
 
           <div className="flex space-x-3">
@@ -115,15 +144,27 @@ const PortfolioPreview = ({ data, setView }) => {
         </nav>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 overflow-x-hidden">
+        {/* Mobile nav panel */}
+        {mobileNavOpen && (
+          <div className="sm:hidden bg-gray-800 text-white p-4 rounded-lg mb-4">
+            <div className="flex flex-col space-y-2">
+              {sections.map((id) => (
+                <button key={id} onClick={() => { postNavigateMessage(id); setMobileNavOpen(false); }} className="text-left block py-2 px-3 rounded-md hover:bg-gray-700">{id.charAt(0).toUpperCase() + id.slice(1)}</button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="border rounded-lg shadow-sm overflow-hidden">
-          <iframe
-            title="Modern Template Export Preview"
-            srcDoc={generatedCode}
-            className="w-full h-[80vh] bg-white"
-            style={{ border: 'none' }}
-            sandbox="allow-scripts allow-same-origin"
-          />
+            <iframe
+              ref={iframeRef}
+              title="Modern Template Export Preview"
+              srcDoc={generatedCode}
+              className="w-full h-[60vh] md:h-[80vh] lg:h-[90vh] bg-white"
+              style={{ border: 'none', overflow: 'hidden' }}
+              sandbox="allow-scripts allow-same-origin"
+            />
         </div>
       </main>
 

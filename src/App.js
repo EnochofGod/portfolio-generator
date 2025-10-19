@@ -38,6 +38,7 @@ const App = () => {
             setData((prevData) => ({ ...prevData, template }));
             setView('config');
           }}
+          data={data}
         />
       );
       break;
@@ -51,9 +52,9 @@ const App = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center app-container">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
           <h2 className="mt-4 text-xl font-semibold text-gray-200 animate-pulse">Loading your portfolio space...</h2>
         </div>
       </div>
@@ -61,7 +62,7 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="app-container min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 overflow-x-hidden">
       <div className="relative">
         {/* Main content */}
         <div className="relative">
