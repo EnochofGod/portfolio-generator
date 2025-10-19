@@ -1,25 +1,13 @@
-import React from 'react';
-import { Layers, Code, Sparkles, Star, Github } from 'lucide-react';
+import React, { useState } from 'react';
+import { Layers, Sparkles, Star } from 'lucide-react';
+import TemplatePreviewModal from './TemplatePreviewModal';
 
 const WelcomePage = ({ setTemplate }) => {
+  const [previewTemplate, setPreviewTemplate] = useState(null);
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Header */}
-      <div className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 py-2">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Code className="w-5 h-5 text-white" />
-            <span className="text-white font-semibold">Portfolio Generator</span>
-          </div>
-          <a href="https://github.com/EnochofGod/portfolio-generator" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="flex items-center text-white hover:text-gray-100 text-sm">
-            <Github className="w-4 h-4 mr-1" />
-            View on GitHub
-          </a>
-        </div>
-      </div>
+      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center py-6"></div>
 
       {/* Hero Section */}
       <div className="text-center mt-16 mb-12 px-4">
@@ -46,66 +34,108 @@ const WelcomePage = ({ setTemplate }) => {
         <h2 className="text-2xl font-bold text-white mb-8 text-center">Select Your Template</h2>
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Modern Template */}
-          <div onClick={() => setTemplate('modern')} 
-               className="group relative bg-gray-800 p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-700 hover:border-cyan-500">
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div className="group relative bg-gray-800 p-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-700 hover:border-cyan-500">
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-white">Modern Developer</h2>
-                <span className="px-3 py-1 text-xs font-medium text-cyan-400 bg-cyan-950 rounded-full">Dark Theme</span>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-xl font-bold text-white">Modern Developer</h2>
+                <span className="px-2 py-1 text-xs font-medium text-cyan-400 bg-cyan-950 rounded-full">Dark</span>
               </div>
-              <p className="text-gray-400 mb-6">A modern, high-contrast theme perfect for developers and tech professionals.</p>
-              <div className="h-48 bg-gray-950 rounded-xl overflow-hidden relative shadow-lg">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
-                <div className="p-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-gray-900 font-bold text-sm">JD</div>
-                    <div className="text-cyan-400 font-medium">Jane Doe</div>
+
+              <div className="flex flex-col md:flex-row gap-4 items-start">
+                <div className="description text-gray-400 flex-1">
+                  <p className="text-sm">Dynamic portfolio with modern UI and tech focus.</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="text-xs px-2 py-1 bg-gray-900 rounded-full">Grid Layout</span>
+                    <span className="text-xs px-2 py-1 bg-gray-900 rounded-full">Dark Theme</span>
+                    <span className="text-xs px-2 py-1 bg-gray-900 rounded-full">GitHub</span>
                   </div>
-                  <div className="mt-4 space-y-2">
-                    <div className="h-2 w-3/4 bg-gray-800 rounded"></div>
-                    <div className="h-2 w-1/2 bg-gray-800 rounded"></div>
+                </div>
+
+                <div 
+                  className="thumbnail w-full md:w-40 h-32 bg-gray-950 rounded-lg overflow-hidden relative shadow-lg group cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewTemplate('modern');
+                  }}
+                >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600"></div>
+                  <img 
+                    src="/images/templates/modern-preview.svg" 
+                    alt="Modern Template Preview"
+                    className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="text-white text-xs font-medium">Click to preview</span>
                   </div>
                 </div>
               </div>
-              <button className="mt-6 w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl hover:from-cyan-600 hover:to-blue-700 transition duration-300 flex items-center justify-center">
-                <Layers className="w-5 h-5 mr-2" />
+
+              <button 
+                onClick={() => setTemplate('modern')}
+                className="mt-4 w-full py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 transition duration-300 flex items-center justify-center text-sm"
+              >
+                <Layers className="w-4 h-4 mr-2" />
                 Select Modern Theme
               </button>
             </div>
           </div>
 
-          {/* Minimal Template */}
-          <div onClick={() => setTemplate('minimal')} 
-               className="group relative bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-200 hover:border-blue-500">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          {/* Classic Template */}
+          <div className="group relative bg-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer border border-gray-200 hover:border-blue-500">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-600/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <div className="relative">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">Minimal Professional</h2>
-                <span className="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full">Light Theme</span>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-xl font-bold text-gray-900">Classic Professional</h2>
+                <span className="px-2 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full">Light</span>
               </div>
-              <p className="text-gray-600 mb-6">A clean, minimalist design that puts your content in the spotlight.</p>
-              <div className="h-48 bg-gray-50 rounded-xl overflow-hidden relative shadow-lg border border-gray-100">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-600"></div>
-                <div className="p-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">JD</div>
-                    <div className="text-gray-900 font-medium">Jane Doe</div>
+
+              <div className="flex flex-col md:flex-row gap-4 items-start">
+                <div className="description text-gray-600 flex-1">
+                  <p className="text-sm">Clean, timeless design for professional portfolios.</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">Sidebar</span>
+                    <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">Timeline</span>
+                    <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">Print</span>
                   </div>
-                  <div className="mt-4 space-y-2">
-                    <div className="h-2 w-3/4 bg-gray-200 rounded"></div>
-                    <div className="h-2 w-1/2 bg-gray-200 rounded"></div>
+                </div>
+
+                <div 
+                  className="thumbnail w-full md:w-40 h-32 bg-gray-50 rounded-lg overflow-hidden relative shadow-lg border border-gray-100 group cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewTemplate('classic');
+                  }}
+                >
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+                  <img 
+                    src="/images/templates/classic-preview.svg" 
+                    alt="Classic Template Preview"
+                    className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="text-white text-xs font-medium">Click to preview</span>
                   </div>
                 </div>
               </div>
-              <button className="mt-6 w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-purple-700 transition duration-300 flex items-center justify-center">
-                <Layers className="w-5 h-5 mr-2" />
-                Select Minimal Theme
+
+              <button 
+                onClick={() => setTemplate('classic')}
+                className="mt-4 w-full py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-purple-700 transition duration-300 flex items-center justify-center text-sm"
+              >
+                <Layers className="w-4 h-4 mr-2" />
+                Select Classic Theme
               </button>
             </div>
           </div>
         </div>
       </div>
+      {/* Preview Modal */}
+      <TemplatePreviewModal
+        isOpen={!!previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+        template={previewTemplate}
+      />
     </div>
   );
 };

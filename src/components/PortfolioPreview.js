@@ -5,21 +5,77 @@ import generateStaticHtml, { getInitialsLogo } from '../utils/generateStaticHtml
 import CodeExportModal from './CodeExportModal';
 
 const PortfolioPreview = ({ data, setView }) => {
-  const { personal = {}, experience = [], projects = [], template, skills = [] } = data || {};
+  const { 
+    personal = {}, 
+    experience = [], 
+    projects = [], 
+    template, 
+    skills = { 
+      technical: [], 
+      soft: [], 
+      certifications: [] 
+    } 
+  } = data || {};
+
   const sections = ['home', 'about', 'skills', 'experience', 'projects', 'contact'];
-  // useActiveSection is initialized to observe sections for future feature (navigation highlighting)
-  useActiveSection(sections);
-  const isModern = template === 'modern';
   const [showExportModal, setShowExportModal] = useState(false);
+  // All hooks must be called before any conditionals
+  useActiveSection(sections);
+
+  // Ensure a valid template is selected
+  React.useEffect(() => {
+    if (!template || (template !== 'modern' && template !== 'classic')) {
+      setView('welcome');
+    }
+  }, [template, setView]);
+
+  // Validate template before rendering
+  if (!template || (template !== 'modern' && template !== 'classic')) {
+    return null;
+  }
+  
+  // Explicitly set the template to use
+  const templateType = template;
+  const isModern = templateType === 'modern';
 
   const getAnchorId = (id) => (id === 'home' ? 'hero' : id);
 
   const generatedCode = generateStaticHtml(data);
   const initials = getInitialsLogo(personal.fullName);
 
+  if (template === 'classic') {
+    return (
+      <div className="classic-template">
+        {/* Classic Template Preview */}
+        <aside className="classic-sidebar">
+          <img src={personal.profileImage} alt={personal.fullName} className="profile-image" 
+               onError={(e)=>{e.target.onerror=null;e.target.src=`https://placehold.co/180x180/2563eb/ffffff?text=${initials}`}}/>
+          <h1>{personal.fullName}</h1>
+          <h3>{personal.title}</h3>
+          <p>{personal.tagline}</p>
+          <div className="contact-info">
+            {personal.email && <a href={`mailto:${personal.email}`} className="contact-item">{personal.email}</a>}
+            {personal.github && <a href={personal.github} className="contact-item">GitHub</a>}
+            {personal.linkedin && <a href={personal.linkedin} className="contact-item">LinkedIn</a>}
+          </div>
+          <button onClick={() => setView('config')} className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded">
+            <ArrowLeft className="w-4 h-4 inline mr-2" /> Edit Data
+          </button>
+          <button onClick={() => setShowExportModal(true)} className="mt-2 w-full bg-green-600 text-white py-2 px-4 rounded">
+            <Code className="w-4 h-4 inline mr-2" /> Export HTML
+          </button>
+        </aside>
+        <main className="classic-main">
+          {/* Content sections will go here */}
+        </main>
+        <CodeExportModal show={showExportModal} onClose={() => setShowExportModal(false)} generatedCode={generatedCode} />
+      </div>
+    );
+  }
+
   return (
-    <div className={`min-h-screen ${isModern ? 'bg-gray-900 text-gray-100' : 'bg-white text-gray-800'}`}>
-      <header className={`sticky top-0 z-20 shadow-xl ${isModern ? 'bg-gray-800' : 'bg-white border-b'}`}>
+    <div className="min-h-screen bg-gray-900 text-gray-100">
+      <header className="sticky top-0 z-20 shadow-xl bg-gray-800">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <span className={`text-xl font-extrabold ${isModern ? 'text-cyan-400' : 'text-blue-600'}`}>{personal.fullName}</span>
 
@@ -62,10 +118,46 @@ const PortfolioPreview = ({ data, setView }) => {
         </section>
 
         <section id="skills" className="py-16">
-          <h2 className={`text-3xl font-extrabold mb-8 ${isModern ? 'text-cyan-400' : 'text-gray-900'}`}>Technical Skills</h2>
-          <div className={`p-6 rounded-xl shadow-xl ${isModern ? 'bg-gray-800' : 'bg-gray-50'}`}>
-            {skills.map((s)=> <span key={s} className={`inline-block text-sm font-medium px-4 py-2 m-1 rounded-full ${isModern ? 'bg-gray-700 text-cyan-400' : 'bg-blue-100 text-blue-800'}`}>{s}</span>)}
+          <h2 className={`text-3xl font-extrabold mb-8 ${isModern ? 'text-cyan-400' : 'text-gray-900'}`}>Skills & Expertise</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className={`p-6 rounded-xl shadow-xl ${isModern ? 'bg-gray-800' : 'bg-gray-50'}`}>
+              <h3 className={`text-xl font-bold mb-4 ${isModern ? 'text-white' : 'text-gray-800'}`}>Technical Skills</h3>
+              <div>
+                {skills.technical.map((s) => (
+                  <span key={s} className={`inline-block text-sm font-medium px-4 py-2 m-1 rounded-full ${isModern ? 'bg-gray-700 text-cyan-400' : 'bg-blue-100 text-blue-800'}`}>
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className={`p-6 rounded-xl shadow-xl ${isModern ? 'bg-gray-800' : 'bg-gray-50'}`}>
+              <h3 className={`text-xl font-bold mb-4 ${isModern ? 'text-white' : 'text-gray-800'}`}>Professional Skills</h3>
+              <div>
+                {skills.soft.map((s) => (
+                  <span key={s} className={`inline-block text-sm font-medium px-4 py-2 m-1 rounded-full ${isModern ? 'bg-gray-700 text-green-400' : 'bg-green-100 text-green-800'}`}>
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
+          
+          {skills.certifications.length > 0 && (
+            <div className={`mt-8 p-6 rounded-xl shadow-xl ${isModern ? 'bg-gray-800' : 'bg-gray-50'}`}>
+              <h3 className={`text-xl font-bold mb-4 ${isModern ? 'text-white' : 'text-gray-800'}`}>Certifications</h3>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {skills.certifications.map((cert, index) => (
+                  <div key={index} className={`p-4 rounded-lg ${isModern ? 'bg-gray-700' : 'bg-white'}`}>
+                    <h4 className={`font-semibold ${isModern ? 'text-cyan-400' : 'text-blue-600'}`}>{cert.name}</h4>
+                    <p className={`text-sm ${isModern ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {cert.issuer} • {cert.year}
+                      {cert.expires && ` (Expires: ${cert.expires})`}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section id="experience" className="py-16">

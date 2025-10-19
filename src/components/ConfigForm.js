@@ -1,14 +1,49 @@
 import React, { useState } from 'react';
 import { 
   ArrowLeft, Send, Github, Layers, Check, Zap, HardHat,
-  MapPin, Globe, Twitter, Award, GraduationCap, BookOpen,
-  Briefcase, Rocket, Certificate, MessageSquare, Users
+  MapPin, Globe, Twitter, Award, GraduationCap,
+  Briefcase, Users, X
 } from 'lucide-react';
 import InputField from './Form/InputField';
 import SectionCard from './Form/SectionCard';
 
 const ConfigForm = ({ data, setData, setView }) => {
-  const [formData, setFormData] = useState(data);
+  // Initialize default structure if any required arrays are missing
+  const initializedData = {
+    personal: {
+      fullName: '',
+      title: '',
+      tagline: '',
+      about: '',
+      email: '',
+      phone: '',
+      location: '',
+      availability: '',
+      website: '',
+      github: '',
+      linkedin: '',
+      twitter: '',
+      profileImage: '',
+      cvFile: '',
+      cvFileName: '',
+      cvFileSize: 0
+    },
+    template: data?.template || 'modern', // Preserve existing template or default to modern
+    education: [],
+    experience: [],
+    projects: [],
+    skills: {
+      technical: [],
+      soft: [],
+      certifications: []
+    }
+  };
+
+  // Initialize form with provided data or default values
+  const [formData, setFormData] = useState(() => ({
+    ...initializedData,
+    ...data, // Merge in any existing data
+  }));
   const MAX_IMAGE_BYTES = 250 * 1024; // 250 KB
   const MAX_CV_BYTES = 2 * 1024 * 1024; // 2 MB
 
@@ -40,14 +75,107 @@ const ConfigForm = ({ data, setData, setView }) => {
         return;
       }
       const reader = new FileReader();
-      reader.onloadend = () => setFormData({ ...formData, personal: { ...formData.personal, cvFile: reader.result, cvFileName: file.name, cvFileSize: file.size } });
+      reader.onloadend = () => {
+        setFormData({ 
+          ...formData, 
+          personal: { 
+            ...formData.personal, 
+            cvFile: reader.result, 
+            cvFileName: file.name, 
+            cvFileSize: file.size 
+          } 
+        });
+        // Show message about auto-fill availability
+        alert('CV uploaded successfully! Click "Auto-Fill Data from CV" to populate the form with your information.\n\nNote: Currently using example data with your name. Full CV parsing coming soon!');
+      };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSkillsChange = (e) => {
+  const handleEducationChange = (index, e) => {
+    const newEdu = [...formData.education];
+    newEdu[index] = { ...newEdu[index], [e.target.name]: e.target.value };
+    setFormData({ ...formData, education: newEdu });
+  };
+
+  const handleAddEducation = () => {
+    const newId = Math.max(0, ...formData.education.map((edu) => edu.id)) + 1;
+    setFormData({ 
+      ...formData, 
+      education: [...formData.education, { 
+        id: newId, 
+        degree: '', 
+        institution: '', 
+        year: '', 
+        highlights: '' 
+      }] 
+    });
+  };
+
+  const handleEducationRemove = (id) => {
+    setFormData({ 
+      ...formData, 
+      education: formData.education.filter((edu) => edu.id !== id) 
+    });
+  };
+
+  const handleTechnicalSkillsChange = (e) => {
     const skillsArray = e.target.value.split(',').map((s) => s.trim()).filter(Boolean);
-    setFormData({ ...formData, skills: skillsArray });
+    setFormData({ 
+      ...formData, 
+      skills: { 
+        ...formData.skills, 
+        technical: skillsArray 
+      } 
+    });
+  };
+
+  const handleSoftSkillsChange = (e) => {
+    const skillsArray = e.target.value.split(',').map((s) => s.trim()).filter(Boolean);
+    setFormData({ 
+      ...formData, 
+      skills: { 
+        ...formData.skills, 
+        soft: skillsArray 
+      } 
+    });
+  };
+
+  const handleCertificationChange = (index, e) => {
+    const newCerts = [...formData.skills.certifications];
+    newCerts[index] = { ...newCerts[index], [e.target.name]: e.target.value };
+    setFormData({ 
+      ...formData, 
+      skills: { 
+        ...formData.skills, 
+        certifications: newCerts 
+      } 
+    });
+  };
+
+  const handleAddCertification = () => {
+    setFormData({ 
+      ...formData, 
+      skills: { 
+        ...formData.skills, 
+        certifications: [
+          ...formData.skills.certifications, 
+          { name: '', issuer: '', year: '', expires: '' }
+        ] 
+      } 
+    });
+  };
+
+  const handleCertificationRemove = (index) => {
+    const newCerts = [...formData.skills.certifications];
+    newCerts.splice(index, 1);
+    setFormData({ 
+      ...formData, 
+      skills: { 
+        ...formData.skills, 
+        certifications: newCerts 
+      } 
+    });
   };
 
   const handleExperienceChange = (index, e) => {
@@ -76,28 +204,65 @@ const ConfigForm = ({ data, setData, setView }) => {
 
   const removeProject = (id) => setFormData({ ...formData, projects: formData.projects.filter((p) => p.id !== id) });
 
+  const handleExperienceAchievementChange = (expIndex, achIndex, e) => {
+    const newExp = [...formData.experience];
+    if (!newExp[expIndex].achievements) {
+      newExp[expIndex].achievements = [];
+    }
+    newExp[expIndex].achievements[achIndex] = e.target.value;
+    setFormData({ ...formData, experience: newExp });
+  };
+
+  const addExperienceAchievement = (expIndex) => {
+    const newExp = [...formData.experience];
+    if (!newExp[expIndex].achievements) {
+      newExp[expIndex].achievements = [];
+    }
+    newExp[expIndex].achievements.push('');
+    setFormData({ ...formData, experience: newExp });
+  };
+
+  const removeExperienceAchievement = (expIndex, achIndex) => {
+    const newExp = [...formData.experience];
+    newExp[expIndex].achievements.splice(achIndex, 1);
+    setFormData({ ...formData, experience: newExp });
+  };
+
+  const handleExperienceTechnologiesChange = (index, e) => {
+    const newExp = [...formData.experience];
+    const techArray = e.target.value.split(',').map(t => t.trim()).filter(Boolean);
+    newExp[index].technologies = techArray;
+    setFormData({ ...formData, experience: newExp });
+  };
+
   const handleAutoFillFromCV = () => {
-    if (!formData.personal.cvFile) return alert('Please upload a CV file (PDF/DOCX) first to simulate auto-fill.');
+    if (!formData.personal.cvFile) {
+      return alert('Please upload a CV file (PDF/DOCX) first.');
+    }
 
-    const mockCVData = {
-      fullName: 'Alex K. Developer',
-      title: 'Full Stack Engineer & Cloud Specialist',
-      tagline: 'Delivering end-to-end solutions, from high-performance UIs to scalable cloud infrastructure.',
-      about: 'MOCK PARSING SUCCESS! Bio extracted from CV: Alex is a certified AWS DevOps professional with 5 years of experience.',
-      email: 'alex.developer@mock.com',
-      github: 'https://github.com/alex-dev-mock',
-      linkedin: 'https://linkedin.com/in/alex-k-dev',
-    };
+    // Extract name from filename
+    const fileName = formData.personal.cvFileName.toLowerCase();
+    const nameParts = fileName.split('.')[0].split(' ').filter(part => 
+      !['cv', 'resume', 'curriculum', 'vitae'].includes(part.toLowerCase())
+    );
+    
+    const fullName = nameParts.map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
 
-    const mockExperience = [
-      { id: 1, year: '2020 - Present', title: 'DevOps Engineer', company: 'Global Tech', description: 'Automated infra provisioning using Terraform.' },
-      { id: 2, year: '2018 - 2020', title: 'Junior Software Developer', company: 'Startup X', description: 'Contributed to the frontend using React.' },
-    ];
-
-    const mockSkills = ['TypeScript', 'React', 'Node.js', 'Terraform', 'AWS Lambda', 'Docker', 'Kubernetes'];
-
-    setFormData({ ...formData, personal: { ...formData.personal, ...mockCVData, profileImage: 'https://placehold.co/128x128/f97316/ffffff?text=AD' }, experience: mockExperience, skills: mockSkills });
-    alert('Form successfully auto-filled (mock).');
+    // Clear the form with just the name from the CV file
+    setFormData({
+      ...initializedData,
+      personal: {
+        ...initializedData.personal,
+        fullName,
+        cvFile: formData.personal.cvFile,
+        cvFileName: formData.personal.cvFileName,
+        cvFileSize: formData.personal.cvFileSize
+      }
+    });
+    
+    alert('Ready to fill in your information. The form has been cleared for you to input your details.');
   };
 
   const handleSubmit = (e) => { e.preventDefault(); setData(formData); setView('preview'); };
@@ -112,16 +277,56 @@ const ConfigForm = ({ data, setData, setView }) => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Choose Template</label>
+          <div className="flex items-center space-x-4">
+            <label className={`inline-flex items-center p-3 border rounded-lg cursor-pointer ${formData.template === 'modern' ? 'border-blue-500 bg-blue-50' : ''}`}>
+              <input type="radio" name="template" value="modern" checked={formData.template === 'modern'} onChange={(e) => setFormData({...formData, template: e.target.value})} className="mr-2" />
+              <div>
+                <div className="font-semibold">Modern</div>
+                <div className="text-sm text-gray-500">Bold, dark, developer-focused layout.</div>
+              </div>
+            </label>
+            <label className={`inline-flex items-center p-3 border rounded-lg cursor-pointer ${formData.template === 'classic' ? 'border-blue-500 bg-blue-50' : ''}`}>
+              <input type="radio" name="template" value="classic" checked={formData.template === 'classic'} onChange={(e) => setFormData({...formData, template: e.target.value})} className="mr-2" />
+              <div>
+                <div className="font-semibold">Classic</div>
+                <div className="text-sm text-gray-500">Clean, sidebar-based professional resume.</div>
+              </div>
+            </label>
+          </div>
+        </div>
         <div className="bg-blue-50 p-6 rounded-2xl shadow-inner border border-blue-200">
           <h3 className="text-2xl font-bold text-blue-700 mb-4 flex items-center"><Zap className="w-6 h-6 mr-2" /> Resume Upload & Quick-Fill</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">CV/Resume File (PDF/DOCX)</label>
               <input type="file" accept=".pdf,.docx" onChange={handleCVUpload} className="w-full p-3 border border-gray-300 rounded-lg" />
-              {formData.personal.cvFileName && <p className="mt-2 text-sm text-green-600 flex items-center"><Check className="w-4 h-4 mr-1" /> {formData.personal.cvFileName}</p>}
+              {formData.personal.cvFileName && (
+                <div className="mt-2">
+                  <p className="text-sm text-green-600 flex items-center">
+                    <Check className="w-4 h-4 mr-1" /> {formData.personal.cvFileName}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    File uploaded successfully! Click the Auto-Fill button to continue.
+                  </p>
+                </div>
+              )}
             </div>
             <div className="mt-7">
-              <button type="button" onClick={handleAutoFillFromCV} className="w-full py-3 bg-orange-500 text-white rounded-lg"><HardHat className="w-5 h-5 mr-2 inline" /> Auto-Fill Data from CV</button>
+              <button 
+                type="button" 
+                onClick={handleAutoFillFromCV} 
+                disabled={!formData.personal.cvFile}
+                className={`w-full py-3 rounded-lg transition-all duration-200 flex items-center justify-center ${
+                  formData.personal.cvFile 
+                    ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-lg animate-pulse' 
+                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <HardHat className={`w-5 h-5 mr-2 ${formData.personal.cvFile ? 'animate-bounce' : ''}`} />
+                {formData.personal.cvFile ? 'Click to Auto-Fill from CV!' : 'Upload a CV first'}
+              </button>
             </div>
           </div>
         </div>
@@ -135,7 +340,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               value={formData.personal.fullName} 
               onChange={handlePersonalChange} 
               required 
-              hint="Your professional name as you'd like it to appear"
+              hint="e.g., John Smith or Dr. Jane Doe"
             />
             <InputField 
               label="Job Title/Role" 
@@ -143,7 +348,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               value={formData.personal.title} 
               onChange={handlePersonalChange} 
               required 
-              hint="Current or desired position"
+              hint="e.g., Senior Software Engineer, Product Manager, UX Designer"
             />
           </div>
           <InputField 
@@ -151,7 +356,7 @@ const ConfigForm = ({ data, setData, setView }) => {
             name="tagline" 
             value={formData.personal.tagline} 
             onChange={handlePersonalChange}
-            hint="A brief, impactful statement about your professional focus"
+            hint="e.g., 'Full-stack developer specializing in React and Node.js' or 'UI/UX designer focused on user-centered design'"
           />
           <InputField 
             label="About Me" 
@@ -160,7 +365,7 @@ const ConfigForm = ({ data, setData, setView }) => {
             onChange={handlePersonalChange} 
             rows={6} 
             required
-            hint="Support markdown formatting. Include key highlights and career focus"
+            hint="Write a brief professional summary. Include your years of experience, key expertise, and career achievements. Use bullet points with • for better formatting."
           />
           <div className="grid md:grid-cols-2 gap-x-6">
             <InputField 
@@ -171,7 +376,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               onChange={handlePersonalChange} 
               icon={Send} 
               required 
-              hint="Professional email address"
+              hint="e.g., professional.email@domain.com"
             />
             <InputField 
               label="Phone" 
@@ -179,7 +384,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               type="tel" 
               value={formData.personal.phone} 
               onChange={handlePersonalChange}
-              hint="Include country code for international"
+              hint="e.g., +1 (555) 123-4567"
             />
           </div>
           <div className="grid md:grid-cols-2 gap-x-6">
@@ -189,7 +394,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               value={formData.personal.location} 
               onChange={handlePersonalChange} 
               icon={MapPin}
-              hint="City, Country or 'Remote'"
+              hint="e.g., 'San Francisco, CA' or 'London, UK' or 'Remote'"
             />
             <InputField 
               label="Availability" 
@@ -197,7 +402,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               value={formData.personal.availability} 
               onChange={handlePersonalChange}
               icon={Users}
-              hint="e.g., 'Open to opportunities', 'Available for freelance'"
+              hint="e.g., 'Open to full-time positions' or 'Available for freelance projects'"
             />
           </div>
           <div className="grid md:grid-cols-2 gap-x-6">
@@ -207,7 +412,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               value={formData.personal.website} 
               onChange={handlePersonalChange} 
               icon={Globe}
-              hint="Your portfolio or blog URL"
+              hint="e.g., https://yourportfolio.com"
             />
             <InputField 
               label="Twitter/X" 
@@ -215,7 +420,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               value={formData.personal.twitter} 
               onChange={handlePersonalChange} 
               icon={Twitter}
-              hint="Your professional Twitter profile URL"
+              hint="e.g., https://twitter.com/yourusername"
             />
           </div>
           <div className="grid md:grid-cols-2 gap-x-6">
@@ -225,7 +430,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               value={formData.personal.github} 
               onChange={handlePersonalChange} 
               icon={Github}
-              hint="Share your code contributions"
+              hint="e.g., https://github.com/yourusername"
             />
             <InputField 
               label="LinkedIn URL" 
@@ -233,7 +438,7 @@ const ConfigForm = ({ data, setData, setView }) => {
               value={formData.personal.linkedin} 
               onChange={handlePersonalChange} 
               icon={Layers}
-              hint="Your professional network profile"
+              hint="e.g., https://linkedin.com/in/yourusername"
             />
           </div>
           <div className="mt-4">
@@ -302,7 +507,7 @@ const ConfigForm = ({ data, setData, setView }) => {
         <div className="bg-white p-6 rounded-2xl shadow-xl border border-blue-100">
           <h3 className="text-2xl font-bold text-blue-600 mb-6 border-b pb-2">
             <div className="flex items-center">
-              <Certificate className="w-6 h-6 mr-2" />
+              <Award className="w-6 h-6 mr-2" />
               3. Skills & Certifications
             </div>
           </h3>

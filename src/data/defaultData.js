@@ -1,5 +1,5 @@
 const defaultData = {
-  template: null, // 'modern', 'minimal', or 'creative'
+  template: null, // Must be explicitly set to 'modern' or 'classic' by user
   personal: {
     fullName: 'Jane Doe',
     title: 'Senior Platform Architect',
