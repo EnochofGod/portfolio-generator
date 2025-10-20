@@ -45,7 +45,7 @@ const ConfigForm = ({ data, setData, setView }) => {
     ...data, // Merge in any existing data
   }));
   const MAX_IMAGE_BYTES = 250 * 1024; // 250 KB
-  const MAX_CV_BYTES = 2 * 1024 * 1024; // 2 MB
+  const MAX_CV_BYTES = 2 * 1024 * 1024 * 1024; // 2 MB
 
   const handlePersonalChange = (e) => {
     setFormData({

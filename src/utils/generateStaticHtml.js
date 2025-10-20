@@ -201,6 +201,36 @@ const generateStaticHtml = (data) => {
           .portfolio-nav .links { display: none; }
           .portfolio-nav .mobile-toggle { display: inline-flex; }
         }
+
+        /* Charming mobile improvements for modern template */
+        @media (max-width: 640px) {
+          .modern-template {
+            padding: 1rem;
+            background: linear-gradient(180deg,#071027 0%, #07121a 100%);
+          }
+          .modern-template .container { padding: 0 0.75rem; }
+          .modern-template header { padding: 1rem 0; }
+          .modern-template .hero-section {
+            padding: 1rem;
+            gap: 1rem;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+            box-shadow: 0 12px 30px rgba(2,6,23,0.45);
+          }
+          .modern-template .profile-image-container img,
+          .modern-template .profile-image img { width: 120px; height: 120px; border-radius: 999px; }
+          .modern-template .skill-category {
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 8px 24px rgba(2,6,23,0.18);
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+          }
+          .modern-template .skill-tag { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+          .modern-template .cv-button { width:100%; display:block; text-align:center; border-radius: 12px; padding: 0.9rem; font-weight:600; }
+          .modern-template .portfolio-nav { margin: 0.5rem; padding: 0.5rem; border-radius: 12px; }
+          .modern-template .portfolio-nav a { font-size: 0.95rem; }
+          .modern-template .theme-toggle { width:44px; height:44px; }
+        }
       </style>
       <!-- Theme toggle button (bottom-right) -->
       <button id="themeToggleBtn" class="theme-toggle" aria-label="Toggle theme" style="bottom:1rem; right:1rem; top:auto;">
@@ -736,6 +766,21 @@ const generateStaticHtml = (data) => {
             margin-left: 0;
             max-width: 100%;
             padding: 1.5rem;
+          /* Charming mobile layout: make sidebar a top card */
+          .classic-sidebar {
+            position: relative !important;
+            width: 100% !important;
+            height: auto !important;
+            margin-bottom: 1rem !important;
+            border-radius: 12px !important;
+            padding: 1rem !important;
+            box-shadow: 0 10px 30px rgba(2,6,23,0.12) !important;
+            background: linear-gradient(180deg, var(--bg-sidebar), rgba(255,255,255,0.02)) !important;
+          }
+          .classic-main { margin-left: 0 !important; padding: 0.75rem !important; }
+          .classic-sidebar-toggle { left: auto !important; right: 1rem !important; top: 1rem !important; }
+          .classic-sidebar .profile-image { width: 120px !important; height: 120px !important; }
+          .classic-template .project-card { border-radius: 12px !important; }
           }
 
           .container {
@@ -1419,12 +1464,26 @@ const generateStaticHtml = (data) => {
         window.addEventListener('message', function(e){
           try {
             const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-            if (!data || data.type !== 'navigate' || !data.id) return;
-            var target = document.getElementById(data.id) || document.querySelector('[name="'+data.id+'"]');
-            if (target && typeof target.scrollIntoView === 'function') {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else if (data.id === 'hero') {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (!data) return;
+            // navigation command
+            if (data.type === 'navigate' && data.id) {
+              var target = document.getElementById(data.id) || document.querySelector('[name="'+data.id+'"]');
+              if (target && typeof target.scrollIntoView === 'function') {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              } else if (data.id === 'hero') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+              return;
+            }
+            // toggle theme command
+            if (data.type === 'toggleTheme') {
+              try {
+                var root = document.querySelector('.modern-template, .classic-template');
+                if (root) {
+                  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+                }
+              } catch(err) {}
+              return;
             }
           } catch (err) {
             // ignore
