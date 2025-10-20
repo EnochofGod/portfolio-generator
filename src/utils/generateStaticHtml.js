@@ -330,6 +330,7 @@ const generateStaticHtml = (data) => {
           transform: rotate(-45deg) translate(6px, -6px);
         }
 
+       
         .mobile-nav {
           display: none;
           position: fixed;
@@ -372,7 +373,11 @@ const generateStaticHtml = (data) => {
           color: #60a5fa;
           background: rgba(96, 165, 250, 0.1);
         }
-
+        @media (min-width: 768px){
+         .profile-image h1{
+             display: none !important;
+         }
+        }
         @media (max-width: 768px) {
           .burger-menu {
             display: flex;
@@ -380,11 +385,24 @@ const generateStaticHtml = (data) => {
             top: 1rem;
             right: 1rem;
           }
-          
+          .portfolio-nav{ 
+              display: none !important;
+               }
+          .menu{
+              display: none !important;
+              }
           .desktop-nav {
             display: none !important;
           }
-          
+          .profile-image{
+          display: flex;
+          margin-bottom: 2rem; 
+          }
+          .profile-image img{
+          width:70px !important;
+          height:70px !important;
+          border-radius:50% !important;
+          }
           .mobile-nav {
             display: block;
           }
@@ -402,7 +420,12 @@ const generateStaticHtml = (data) => {
           }
         }
       </style>
+  
       <nav class="portfolio-nav" style="width:100%;background:#0e172a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem 1rem 2rem;position:sticky;top:0;z-index:100;">
+    
+      <div class="pro"style="display:flex;gap:0.1rem;">
+        <h1 style="font-size:2rem; font-weight:bold; margin-left:1rem; margin-top:4rem color: light-blue; ">${personal.fullName}</h1>
+      </div>
         <div style="display:flex;gap:1.5rem;">
           <a href="#hero" style="color:#fff;text-decoration:none;font-size:1rem;">Home</a>
           <a href="#about" style="color:#fff;text-decoration:none;font-size:1rem;">About</a>
@@ -410,6 +433,7 @@ const generateStaticHtml = (data) => {
           <a href="#experience" style="color:#fff;text-decoration:none;font-size:1rem;">Experience</a>
           <a href="#projects" style="color:#fff;text-decoration:none;font-size:1rem;">Projects</a>
           <a href="#contact" style="color:#fff;text-decoration:none;font-size:1rem;">Contact</a>
+          ${cvButtonHtml}
         </div>
       </nav>
       <div class="container">
@@ -431,21 +455,22 @@ const generateStaticHtml = (data) => {
                 </svg>
               </button>
             </div>
-            <div class="mobile-section-links" style="display:flex;flex-direction:column;gap:1rem;">
+            <div class="mobile-section-links" style="display:flex; flex-direction:column;gap:1rem;">
               <a href="#hero" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Home</a>
               <a href="#about" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">About</a>
               <a href="#skills" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Skills</a>
               <a href="#experience" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Experience</a>
               <a href="#projects" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Projects</a>
               <a href="#contact" onclick="this.closest('.mobile-nav').classList.remove('active'); document.querySelector('.burger-menu').classList.remove('active')">Contact</a>
-
+              ${cvButtonHtml}
             </div>
           </nav>
         </header>
         <main>
           <section id="hero" class="hero-section">
             <div class="profile-image">
-              <img src="${personal.profileImage}" alt="profile" style="width:180px;height:180px;border-radius:50%;object-fit:cover" onerror="this.onerror=null;this.src='https://placehold.co/180x180/6b7280/ffffff?text=${getInitialsLogo(personal.fullName)}'" />
+            <img src="${personal.profileImage}" alt="profile" style="width:180px;height:180px;border-radius:50%;object-fit:cover" onerror="this.onerror=null;this.src='https://placehold.co/180x180/6b7280/ffffff?text=${getInitialsLogo(personal.fullName)}'" />
+             <h1 style="font-size:2rem; font-weight:bold; margin-left:1rem; margin-top:4rem color: light-blue; ">${personal.fullName}</h1>
             </div>
             <div>
               <h2 class="text-2xl font-bold mb-2">${personal.title}</h2>
@@ -458,7 +483,7 @@ const generateStaticHtml = (data) => {
           <section id="about" class="about-section py-6">
             <div class="max-w-5xl mx-auto">
               <h3 class="text-2xl font-bold mb-4">About</h3>
-              <p class="text-cyan-100">${(personal.about || '').replace(/\n/g, '<br/>')}</p>
+              <p class="text-white-100">${(personal.about || '').replace(/\n/g, '<br/>')}</p>
             </div>
           </section>
           
@@ -531,11 +556,11 @@ const generateStaticHtml = (data) => {
           </section>
 
           <!-- Contact section -->
-          <section id="contact" class="contact-section mt-8 py-8 bg-white text-gray-900">
+          <section id="contact" style="border-radius:1rem;" class="contact-section mt-8 py-8 bg-gray text-white-900">
             <div class="max-w-5xl mx-auto">
-              <h3 class="text-2xl font-bold mb-4">Contact</h3>
-              <div class="space-y-2 text-gray-700">
-                ${personal.email ? `<div>Email: <a href="mailto:${personal.email}" class="text-cyan-600">${personal.email}</a></div>` : ''}
+              <h3 class="text-white-2xl font-bold mb-4">Contact</h3>
+              <div class="space-y-2 text-white-700">
+                ${personal.email ? `<div>Email: <a href="mailto:${personal.email}" class="text-white-600">${personal.email}</a></div>` : ''}
                 ${personal.phone ? `<div>Phone: ${personal.phone}</div>` : ''}
                 ${personal.location ? `<div>Location: ${personal.location}</div>` : ''}
               </div>
@@ -1186,10 +1211,9 @@ const generateStaticHtml = (data) => {
           <h1>${personal.fullName}</h1>
           <!-- Sidebar section navigation -->
           <nav class="sidebar-nav" style="margin:1rem 0 1.5rem; display:flex; flex-direction:column; gap:0.5rem;">
-            <a href="#hero" style="color:var(--text-secondary); text-decoration:none;">Home</a>
-            <a href="#about" style="color:var(--text-secondary); text-decoration:none;">About</a>
+            <a href="#experience" style="color:var(--text-secondary); text-decoration:none;">Experience</a> 
             <a href="#skills" style="color:var(--text-secondary); text-decoration:none;">Skills</a>
-            <a href="#experience" style="color:var(--text-secondary); text-decoration:none;">Experience</a>
+            <a href="#about" style="color:var(--text-secondary); text-decoration:none;">About</a>
             <a href="#projects" style="color:var(--text-secondary); text-decoration:none;">Projects</a>
             <a href="#contact" style="color:var(--text-secondary); text-decoration:none;">Contact</a>
           </nav>

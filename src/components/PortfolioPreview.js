@@ -77,7 +77,7 @@ const PortfolioPreview = ({ data, setView }) => {
               <button onClick={() => setView('config')} className="flex items-center text-sm font-semibold px-3 py-2 rounded-lg bg-blue-600 text-white">
                 <ArrowLeft className="w-4 h-4 mr-2" /> Edit Data
               </button>
-              <h2 className="text-lg font-bold">Classic Template Preview</h2>
+              <h2 className="text-lg font-bold">Classic Template </h2>
             </div>
 
             <div className="flex items-center gap-3">
@@ -95,7 +95,7 @@ const PortfolioPreview = ({ data, setView }) => {
             <iframe
               title="Classic Template Export Preview"
               srcDoc={generatedCode}
-              className="w-full h-[70vh] md:h-[80vh] lg:h-[90vh]"
+              className="w-full h-[90vh] md:h-[90vh] lg:h-[90vh]"
               style={{ border: 'none' }}
               sandbox="allow-scripts allow-same-origin"
             />
@@ -111,35 +111,22 @@ const PortfolioPreview = ({ data, setView }) => {
     <div className="min-h-screen bg-gray-900 text-gray-100">
       <header className="sticky top-0 z-20 shadow-xl bg-gray-800">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <span className={`text-xl font-extrabold ${isModern ? 'text-cyan-400' : 'text-blue-600'}`}>{personal.fullName}</span>
-
-          <div className="hidden sm:flex space-x-6 text-sm font-medium">
-            {sections.map((id) => (
-              <button key={id} onClick={() => postNavigateMessage(id)} className="py-1 px-3 rounded-lg font-medium transition duration-200 text-blue-200 hover:text-white hover:bg-blue-700">{id.charAt(0).toUpperCase() + id.slice(1)}</button>
-            ))}
-          </div>
-
-          {/* Mobile nav button */}
-          <div className="sm:hidden">
-            <button
-              onClick={() => setMobileNavOpen((s) => !s)}
-              aria-label="Toggle navigation"
-              className="p-2 rounded-md bg-gray-700 text-white"
-            >
-              {mobileNavOpen ? 'Close' : 'Menu'}
-            </button>
-          </div>
-
-          <div className="flex space-x-3">
+          <div            
+            className="flex  space-x-8 items-center justify-between mb-4">
+            <div>
             <button onClick={() => setView('config')} className={`flex items-center text-sm font-semibold px-4 py-2 rounded-lg ${isModern ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700'}`}>
               <ArrowLeft className="w-4 h-4 mr-2" /> Edit Data
             </button>
+            </div>
+            <h2 className="text-lg font-bold">Modern Template </h2>
+            <div style={{display:'flex', gap:"1rem"}}>
             <button onClick={() => setShowExportModal(true)} className="flex items-center text-sm font-semibold px-4 py-2 rounded-lg bg-green-600 text-white">
               <Code className="w-4 h-4 mr-2" /> Export HTML
             </button>
             <button onClick={openGeneratedHtmlInNewTab} className="flex items-center text-sm font-semibold px-4 py-2 rounded-lg bg-indigo-600 text-white">
               <Layers className="w-4 h-4 mr-2" /> Open Preview
             </button>
+            </div>
           </div>
         </nav>
       </header>
