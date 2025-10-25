@@ -34,16 +34,17 @@ export default function TemplatePreviewModal({ isOpen, onClose, template, genera
   useEffect(() => {
     let timer;
     if (autoDemoRunning && generatedCode) {
-      // sequence: show hero -> about -> skills -> toggle theme -> projects -> contact
       const steps = ['hero', 'about', 'skills', 'experience', 'projects', 'contact'];
       let i = 0;
       const runStep = () => {
-        const id = steps[i++ % steps.length];
+        const id = steps[i % steps.length];
+        i += 1;
         postToIframe({ type: 'navigate', id });
         if (i === 3) postToIframe({ type: 'toggleTheme' });
-        timer = setTimeout(runStep, 2200);
+        timer = setTimeout(runStep, 2400);
       };
-      runStep();
+      // small delay to ensure iframe content is ready
+      timer = setTimeout(runStep, 600);
     }
     return () => clearTimeout(timer);
   }, [autoDemoRunning, generatedCode]);
@@ -52,11 +53,16 @@ export default function TemplatePreviewModal({ isOpen, onClose, template, genera
   const postToIframe = (msg) => {
     try {
       const win = iframeRef.current && iframeRef.current.contentWindow;
-      if (win) win.postMessage(JSON.stringify(msg), '*');
+      if (!win) return;
+      win.postMessage(JSON.stringify(msg), '*');
     } catch (err) {
       // ignore
     }
   };
+
+  useEffect(() => {
+    if (!isOpen) setAutoDemoRunning(false);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -108,9 +114,9 @@ export default function TemplatePreviewModal({ isOpen, onClose, template, genera
 
       <div
         ref={modalRef}
-        className="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl m-4 modal-panel"
+        className="bg-white dark:bg-gray-900 w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl m-4 modal-panel flex flex-col"
       >
-        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between z-10">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{details.title}</h2>
             {details.subtitle && <div className="text-sm text-gray-500">{details.subtitle}</div>}
@@ -136,10 +142,22 @@ export default function TemplatePreviewModal({ isOpen, onClose, template, genera
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 64px)' }}>
           <div className="relative aspect-[16/10] mb-8 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50">
             {generatedCode ? (
-              <iframe ref={iframeRef} title={`${details.title} Live Preview`} srcDoc={generatedCode} className="w-full h-full" style={{ border: 'none' }} sandbox="allow-scripts allow-same-origin" />
+              <iframe
+                ref={iframeRef}
+                title={`${details.title} Live Preview`}
+                srcDoc={generatedCode}
+                className="w-full h-full"
+                style={{ border: 'none' }}
+                sandbox="allow-scripts allow-same-origin"
+                onLoad={() => {
+                  if (autoDemoRunning) {
+                    setTimeout(() => postToIframe({ type: 'navigate', id: 'hero' }), 300);
+                  }
+                }}
+              />
             ) : (
               <img src={details.image} alt={`${details.title} Preview`} className="w-full h-full object-cover" />
             )}
