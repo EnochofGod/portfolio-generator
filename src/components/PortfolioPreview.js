@@ -92,13 +92,13 @@ const PortfolioPreview = ({ data, setView }) => {
 
               <div className="flex items-center gap-3">
                 <button onClick={() => setView('config')} className="flex items-center text-sm font-semibold px-4 py-2 rounded-xl bg-white/80 backdrop-blur-sm text-blue-600 hover:text-blue-800 transition-all duration-300 border border-blue-200/50 hover:border-blue-300 shadow-sm hover:shadow-md">
-                  <ArrowLeft className="w-3 h-3 mr-2" /> Edit Data
+                  <ArrowLeft className="w-2 h-2 mr-2" /> Edit Data
                 </button>
                 <button onClick={() => setShowExportModal(true)} className="flex items-center text-sm font-semibold px-4 py-2 rounded-xl bg-green-600 text-white hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                  <Code className="w-3 h-3 mr-2" /> Export HTML
+                  <Code className="w-2 h-2 mr-2" /> Export HTML
                 </button>
                 <button onClick={openGeneratedHtmlInNewTab} className="flex items-center text-sm font-semibold px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                  <Layers className="w-3 h-3 mr-2" /> Open Preview
+                  <Layers className="w-2 h-2 mr-2" /> Open Preview
                 </button>
               </div>
             </div>
@@ -146,13 +146,13 @@ const PortfolioPreview = ({ data, setView }) => {
 
               <div className="flex items-center gap-3">
                 <button onClick={() => setView('config')} className="flex items-center text-sm font-semibold px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm text-cyan-300 hover:text-white transition-all duration-300 border border-white/20 hover:border-cyan-400 shadow-sm hover:shadow-md">
-                  <ArrowLeft className="w-3 h-3 mr-2" /> Edit Data
+                  <ArrowLeft className="w-2 h-2 mr-2" /> Edit Data
                 </button>
                 <button onClick={() => setShowExportModal(true)} className="flex items-center text-sm font-semibold px-4 py-2 rounded-xl bg-green-600 text-white hover:bg-green-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                  <Code className="w-3 h-3 mr-2" /> Export HTML
+                  <Code className="w-2 h-2 mr-2" /> Export HTML
                 </button>
                 <button onClick={openGeneratedHtmlInNewTab} className="flex items-center text-sm font-semibold px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                  <Layers className="w-3 h-3 mr-2" /> Open Preview
+                  <Layers className="w-2 h-2 mr-2" /> Open Preview
                 </button>
               </div>
             </div>
