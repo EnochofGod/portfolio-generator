@@ -239,13 +239,24 @@ const ConfigForm = ({ data, setData, setView }) => {
   const handleSubmit = (e) => { e.preventDefault(); setData(formData); setView('preview'); };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-8 bg-gray-50 min-h-screen">
-      <div className="flex justify-between items-center mb-8 pb-4 border-b border-blue-200">
-        <h2 className="text-3xl font-extrabold text-gray-800">Fill Your Template Data</h2>
-        <button onClick={() => setView('welcome')} className="flex items-center text-blue-600 hover:text-blue-800 transition duration-150 font-medium">
-          <ArrowLeft className="w-5 h-5 mr-1" /> Back to Templates
-        </button>
+    <div className="max-w-5xl mx-auto p-4 sm:p-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-20 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-20 w-80 h-80 bg-purple-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-200/10 rounded-full blur-3xl"></div>
       </div>
+
+      <div className="relative z-10">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-6 border-b border-blue-200/50">
+          <div className="mb-4 sm:mb-0">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-2">Customize Your Portfolio</h2>
+            <p className="text-gray-600">Fill in your information to create a stunning professional portfolio</p>
+          </div>
+          <button onClick={() => setView('welcome')} className="flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm text-blue-600 hover:text-blue-800 transition-all duration-300 font-medium rounded-xl border border-blue-200/50 hover:border-blue-300 shadow-sm hover:shadow-md">
+            <ArrowLeft className="w-5 h-5 mr-2" /> Back to Templates
+          </button>
+        </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -285,8 +296,16 @@ const ConfigForm = ({ data, setData, setView }) => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-xl border border-blue-100">
-          <h3 className="text-2xl font-bold text-blue-600 mb-6 border-b pb-2">1. Personal Information</h3>
+        <div className="bg-white/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl shadow-xl border border-white/50 mb-8">
+          <div className="flex items-center mb-6 pb-4 border-b border-blue-100">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-blue-600">Personal Information</h3>
+              <p className="text-gray-600 text-sm">Tell us about yourself</p>
+            </div>
+          </div>
           <div className="grid md:grid-cols-2 gap-x-6">
             <InputField 
               label="Full Name" 
@@ -402,13 +421,16 @@ const ConfigForm = ({ data, setData, setView }) => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-xl border border-blue-100">
-          <h3 className="text-2xl font-bold text-blue-600 mb-6 border-b pb-2">
-            <div className="flex items-center">
-              <GraduationCap className="w-6 h-6 mr-2" />
-              2. Education
+        <div className="bg-white/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl shadow-xl border border-white/50 mb-8">
+          <div className="flex items-center mb-6 pb-4 border-b border-blue-100">
+            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
+              <GraduationCap className="w-5 h-5 text-white" />
             </div>
-          </h3>
+            <div>
+              <h3 className="text-2xl font-bold text-blue-600">Education</h3>
+              <p className="text-gray-600 text-sm">Your academic background</p>
+            </div>
+          </div>
           {formData.education.map((edu, index) => (
             <SectionCard 
               key={edu.id} 
@@ -458,13 +480,16 @@ const ConfigForm = ({ data, setData, setView }) => {
           </button>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-xl border border-blue-100">
-          <h3 className="text-2xl font-bold text-blue-600 mb-6 border-b pb-2">
-            <div className="flex items-center">
-              <Award className="w-6 h-6 mr-2" />
-              3. Skills & Certifications
+        <div className="bg-white/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl shadow-xl border border-white/50 mb-8">
+          <div className="flex items-center mb-6 pb-4 border-b border-blue-100">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
+              <Award className="w-5 h-5 text-white" />
             </div>
-          </h3>
+            <div>
+              <h3 className="text-2xl font-bold text-blue-600">Skills & Certifications</h3>
+              <p className="text-gray-600 text-sm">Showcase your expertise and credentials</p>
+            </div>
+          </div>
           
           <div className="space-y-6">
             <div>
@@ -558,13 +583,16 @@ const ConfigForm = ({ data, setData, setView }) => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-xl border border-blue-100">
-          <h3 className="text-2xl font-bold text-blue-600 mb-6 border-b pb-2">
-            <div className="flex items-center">
-              <Briefcase className="w-6 h-6 mr-2" />
-              4. Work Experience
+        <div className="bg-white/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl shadow-xl border border-white/50 mb-8">
+          <div className="flex items-center mb-6 pb-4 border-b border-blue-100">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
+              <Briefcase className="w-5 h-5 text-white" />
             </div>
-          </h3>
+            <div>
+              <h3 className="text-2xl font-bold text-blue-600">Work Experience</h3>
+              <p className="text-gray-600 text-sm">Your professional journey</p>
+            </div>
+          </div>
           {formData.experience.map((exp, index) => (
             <SectionCard key={exp.id} title={`Job #${index + 1}`} onRemove={() => removeExperience(exp.id)}>
               <div className="grid md:grid-cols-2 gap-x-6">
@@ -664,8 +692,16 @@ const ConfigForm = ({ data, setData, setView }) => {
           </button>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-xl border border-blue-100">
-          <h3 className="text-2xl font-bold text-blue-600 mb-6 border-b pb-2">4. Key Projects</h3>
+        <div className="bg-white/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl shadow-xl border border-white/50 mb-8">
+          <div className="flex items-center mb-6 pb-4 border-b border-blue-100">
+            <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg mr-4">
+              <Layers className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-blue-600">Key Projects</h3>
+              <p className="text-gray-600 text-sm">Your most impressive work</p>
+            </div>
+          </div>
           {formData.projects.map((proj, index) => (
             <SectionCard key={proj.id} title={`Project #${index + 1}`} onRemove={() => removeProject(proj.id)}>
               <InputField label="Project Title" name="title" value={proj.title} onChange={(e) => handleProjectChange(index, e)} />
@@ -675,10 +711,20 @@ const ConfigForm = ({ data, setData, setView }) => {
           <button type="button" onClick={addProject} className="w-full py-2 border-2 border-blue-500 text-blue-600 font-semibold rounded-lg">+ Add Project</button>
         </div>
 
-        <div className="pt-4 pb-12">
-          <button type="submit" className="w-full py-4 bg-blue-600 text-white font-extrabold text-lg rounded-xl">Generate Portfolio Preview</button>
+        <div className="pt-6 pb-12">
+          <div className="bg-gradient-to-r from-blue-500 via-purple-600 to-cyan-600 p-8 rounded-2xl shadow-2xl">
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-white mb-2">Ready to Create Your Portfolio?</h3>
+              <p className="text-blue-100 mb-6">Click below to generate your stunning portfolio preview</p>
+              <button type="submit" className="px-8 py-4 bg-white text-blue-600 font-bold text-lg rounded-xl hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center mx-auto">
+                <Zap className="w-6 h-6 mr-3" />
+                Generate Portfolio Preview
+              </button>
+            </div>
+          </div>
         </div>
       </form>
+      </div>
     </div>
   );
 }

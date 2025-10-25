@@ -88,20 +88,32 @@ const generateStaticHtml = (data) => {
         }
         @media (min-width: 768px) {
           .modern-template .hero-section {
-            grid-template-columns: auto 1fr;
-            gap: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
             padding: 3rem 0;
+            min-height: 50vh;
           }
+          .modern-template .profile-image-container img { width:300px !important;height:300px!important; }
+          .modern-template .profile-image-container h1 { font-size:3rem !important; }
+          .modern-template .profile-image-container .title-desktop { font-size:1.5rem !important; }
+          .modern-template .profile-image-container .tagline-desktop { font-size:1rem !important; }
         }
         .modern-template .profile-image-container {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 1.5rem;
+          justify-content: center;
+          gap: 0.2rem !important;
+          text-align: center;
+          margin: 1rem auto; /* requested margin */
         }
+        /* Keep centered alignment at all sizes */
         @media (min-width: 768px) {
           .modern-template .profile-image-container {
-            align-items: flex-start;
+            align-items: center;
           }
         }
         .modern-template .skills-grid {
@@ -136,7 +148,7 @@ const generateStaticHtml = (data) => {
           padding: 0.35rem 0.75rem;
           border-radius: 0.5rem;
           margin: 0.25rem;
-          font-size: 0.875rem;
+          font-size: 1rem;
         }
         .modern-template[data-theme="dark"] .skill-tag {
           background: #374151;
@@ -148,10 +160,10 @@ const generateStaticHtml = (data) => {
         }
         .modern-template .cv-button {
           display: inline-block;
-          padding: 0.75rem 1.5rem;
+          padding: 0.5rem 1.2rem;
           border-radius: 0.5rem;
           text-decoration: none;
-          font-weight: 500;
+          font-weight: 400;
           transition: all 0.2s;
         }
         .modern-template[data-theme="dark"] .cv-button {
@@ -190,16 +202,36 @@ const generateStaticHtml = (data) => {
           background: linear-gradient(180deg,#ffffff,#f8fafc);
           color: #111827;
         }
-
-        /* Ensure images scale on small screens and don't force horizontal scroll */
         .modern-template img, .modern-template svg { max-width: 100%; height: auto; display: block; }
 
         /* Navigation responsive tweaks */
-        .portfolio-nav { display:flex; align-items:center; gap:1rem; }
-        .portfolio-nav .links { display:flex; gap:1rem; }
+        .portfolio-nav {
+          display:flex;
+          align-items:center;
+          justify-content: space-between;
+          gap:1.25rem; /* add a bit more space between brand and nav */
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          backdrop-filter: blur(10px);
+          background: rgba(14, 23, 42, 0.8);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 1rem 2rem;
+          margin: -1rem -2rem 1rem -2rem;
+        }
+        .portfolio-nav .brand { display:flex; align-items:center; gap:0.75rem; }
+        .portfolio-nav .links { display:flex; gap:1.5rem; }
+        @media (max-width: 1024px) {
+          .portfolio-nav { gap:1rem; }
+        }
         @media (max-width: 768px) {
           .portfolio-nav .links { display: none; }
-          .portfolio-nav .mobile-toggle { display: inline-flex; }
+          .portfolio-nav .mobile-toggle { display: inline-flex; margin-left:auto; }
+          .portfolio-nav {
+            padding: 0.75rem 1rem;
+            margin: -1rem -0.75rem 1rem -0.75rem;
+            gap: 0.75rem;
+          }
         }
 
         /* Charming mobile improvements for modern template */
@@ -207,30 +239,77 @@ const generateStaticHtml = (data) => {
           .modern-template {
             padding: 1rem;
             background: linear-gradient(180deg,#071027 0%, #07121a 100%);
+            animation: fadeIn 0.8s ease-out;
           }
           .modern-template .container { padding: 0 0.75rem; }
           .modern-template header { padding: 1rem 0; }
           .modern-template .hero-section {
-            padding: 1rem;
-            gap: 1rem;
-            border-radius: 14px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
-            box-shadow: 0 12px 30px rgba(2,6,23,0.45);
+            padding: 1.5rem;
+            gap: 1.5rem;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            box-shadow: 0 20px 40px rgba(2,6,23,0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: slideUp 0.6s ease-out 0.2s both;
           }
           .modern-template .profile-image-container img,
-          .modern-template .profile-image img { width: 120px; height: 120px; border-radius: 999px; }
-          .modern-template .skill-category {
-            border-radius: 12px;
-            padding: 1rem;
-            box-shadow: 0 8px 24px rgba(2,6,23,0.18);
-            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+          .modern-template .profile-image img {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 30px rgba(2,6,23,0.4);
+            animation: bounceIn 0.8s ease-out 0.4s both;
           }
-          .modern-template .skill-tag { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
-          .modern-template .cv-button { width:100%; display:block; text-align:center; border-radius: 12px; padding: 0.9rem; font-weight:600; }
-          .modern-template .portfolio-nav { margin: 0.5rem; padding: 0.5rem; border-radius: 12px; }
-          .modern-template .portfolio-nav a { font-size: 0.95rem; }
-          .modern-template .theme-toggle { width:44px; height:44px; }
+          .modern-template .skill-category {
+            border-radius: 16px;
+            padding: 1.25rem;
+            box-shadow: 0 12px 32px rgba(2,6,23,0.2);
+            background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.08);
+            animation: fadeInUp 0.6s ease-out 0.6s both;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+          }
+          .modern-template .skill-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(2,6,23,0.3);
+          }
+          .modern-template .skill-tag {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            animation: scaleIn 0.4s ease-out both;
+            animation-delay: calc(var(--i, 0) * 0.1s);
+          }
+          .modern-template .cv-button {
+            width:100%;
+            display:block;
+            text-align:center;
+            border-radius: 16px;
+            padding: 1rem;
+            font-weight:600;
+            background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+            box-shadow: 0 8px 20px rgba(34, 211, 238, 0.3);
+            animation: pulse 2s infinite;
+          }
+          .modern-template .theme-toggle {
+            width:48px;
+            height:48px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: float 3s ease-in-out infinite;
+          }
         }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounceIn { from { opacity: 0; transform: scale(0.3); } to { opacity: 1; transform: scale(1); } animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        @keyframes pulse { 0%, 100% { box-shadow: 0 8px 20px rgba(34, 211, 238, 0.3); } 50% { box-shadow: 0 8px 30px rgba(34, 211, 238, 0.5); } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
       </style>
       <!-- Theme toggle button (bottom-right) -->
       <button id="themeToggleBtn" class="theme-toggle" aria-label="Toggle theme" style="bottom:1rem; right:1rem; top:auto;">
@@ -379,72 +458,72 @@ const generateStaticHtml = (data) => {
          }
         }
         @media (max-width: 768px) {
+         
           .burger-menu {
             display: flex;
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 0.75rem;
           }
-          .portfolio-nav{ 
-              display: none !important;
-               }
-          .menu{
-              display: none !important;
-              }
-          .desktop-nav {
+          .portfolio-nav .links {
             display: none !important;
           }
+          .portfolio-nav{
+           margin:0 !important;
+          }
+          .hero-section{
+           margin-top: 3rem !important;
+          }
           .profile-image{
-          display: flex;
-          margin-bottom: 2rem; 
+            display: flex !important;
+            gap: 1rem !important;
+            flex-direction:column !important;
+            margin-bottom: 2rem !important;
+            text-align: center !important;
+          }
+          .profile-image h1{
+            font-size: 1.8rem !important;
+            margin: 0 !important;
+            color: #60a5fa !important;
           }
           .profile-image img{
-          width:70px !important;
-          height:70px !important;
-          border-radius:50% !important;
+            width: 120px !important;
+            height: 120px !important;
+            border-radius: 50% !important;
+            border: 3px solid rgba(255, 255, 255, 0.2) !important;
+            box-shadow: 0 8px 24px rgba(2, 6, 23, 0.3) !important;
           }
           .mobile-nav {
             display: block;
-          }
-
-          .burger-menu.active .burger-line:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-          }
-
-          .burger-menu.active .burger-line:nth-child(2) {
-            opacity: 0;
-          }
-
-          .burger-menu.active .burger-line:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
+            margin: 0;
+            
           }
         }
       </style>
   
-      <nav class="portfolio-nav" style="width:100%;background:#0e172a;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem 1rem 2rem;position:sticky;top:0;z-index:100;">
-    
-      <div class="pro"style="display:flex;gap:0.1rem;">
-        <h1 style="font-size:2rem; font-weight:bold; margin-left:1rem; margin-top:4rem color: light-blue; ">${personal.fullName}</h1>
-      </div>
-        <div style="display:flex;gap:1.5rem;">
-          <a href="#hero" style="color:#fff;text-decoration:none;font-size:1rem;">Home</a>
-          <a href="#about" style="color:#fff;text-decoration:none;font-size:1rem;">About</a>
-          <a href="#skills" style="color:#fff;text-decoration:none;font-size:1rem;">Skills</a>
-          <a href="#experience" style="color:#fff;text-decoration:none;font-size:1rem;">Experience</a>
-          <a href="#projects" style="color:#fff;text-decoration:none;font-size:1rem;">Projects</a>
-          <a href="#contact" style="color:#fff;text-decoration:none;font-size:1rem;">Contact</a>
+      <nav class="portfolio-nav">
+        <div class="brand pro" style="display:flex;gap:0.75rem; align-items:center;">
+          <h1 style="font-size:2rem; font-weight:bold; color: #60a5fa; ">${personal.fullName}</h1>
+        </div>
+        <div class="links">
+          <a href="#hero">Home</a>
+          <a href="#about">About</a>
+          <a href="#skills">Skills</a>
+          <a href="#experience">Experience</a>
+          <a href="#projects">Projects</a>
+          <a href="#contact">Contact</a>
           ${cvButtonHtml}
         </div>
+        <button class="mobile-toggle burger-menu" onclick="this.classList.toggle('active'); document.querySelector('.mobile-nav').classList.toggle('active')">
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+          <span class="burger-line"></span>
+        </button>
       </nav>
       <div class="container">
         <!-- ...existing code... -->
-
-          <!-- Mobile Burger Menu -->
-          <button class="burger-menu" onclick="this.classList.toggle('active'); document.querySelector('.mobile-nav').classList.toggle('active')">
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-            <span class="burger-line"></span>
-          </button>
 
           <!-- Mobile Navigation -->
           <nav class="mobile-nav">
@@ -468,14 +547,11 @@ const generateStaticHtml = (data) => {
         </header>
         <main>
           <section id="hero" class="hero-section">
-            <div class="profile-image">
-            <img src="${personal.profileImage}" alt="profile" style="width:180px;height:180px;border-radius:50%;object-fit:cover" onerror="this.onerror=null;this.src='https://placehold.co/180x180/6b7280/ffffff?text=${getInitialsLogo(personal.fullName)}'" />
-             <h1 style="font-size:2rem; font-weight:bold; margin-left:1rem; margin-top:4rem color: light-blue; ">${personal.fullName}</h1>
-            </div>
-            <div>
-              <h2 class="text-2xl font-bold mb-2">${personal.title}</h2>
-              <p class="text-lg opacity-90 mb-4">${personal.tagline}</p>
-              <p class="opacity-75">${personal.tagline ? personal.tagline : ''}</p>
+            <div class="profile-image-container">
+              <img src="${personal.profileImage}" alt="profile" style="width:180px;height:180px;border-radius:50%;object-fit:cover;margin:0 auto;" onerror="this.onerror=null;this.src='https://placehold.co/180x180/6b7280/ffffff?text=${getInitialsLogo(personal.fullName)}'" />
+              <h1 style="font-size:2rem; font-weight:700; color: #60a5fa; margin-top:0.75rem;">${personal.fullName}</h1>
+              ${personal.title ? `<div class="title-desktop" style="color:#cbd5e1; font-size:1rem;">${personal.title}</div>` : ''}
+              ${personal.tagline ? `<p class="tagline-desktop" style="opacity:0.9; max-width:48ch; margin:0.5rem auto 0; font-size:0.95rem;">${personal.tagline}</p>` : ''}
             </div>
           </section>
           
@@ -559,6 +635,7 @@ const generateStaticHtml = (data) => {
           <section id="contact" style="border-radius:1rem;" class="contact-section mt-8 py-8 bg-gray text-white-900">
             <div class="max-w-5xl mx-auto">
               <h3 class="text-white-2xl font-bold mb-4">Contact</h3>
+              
               <div class="space-y-2 text-white-700">
                 ${personal.email ? `<div>Email: <a href="mailto:${personal.email}" class="text-white-600">${personal.email}</a></div>` : ''}
                 ${personal.phone ? `<div>Phone: ${personal.phone}</div>` : ''}
@@ -577,12 +654,107 @@ const generateStaticHtml = (data) => {
   const renderClassicTemplate = () => `
     <div class="classic-template" id="classic-portfolio" data-theme="dark">
       <style>
+        /* Base */
         #classic-portfolio.classic-template {
           font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
           min-height: 100vh;
           line-height: 1.6;
           background-color: var(--bg-main);
           color: var(--text-primary);
+          overflow-x: hidden;
+        }
+        
+        /* Top Bar (Desktop) */
+        .classic-topbar {
+          position: sticky;
+          top: 0;
+          z-index: 120;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          padding: 0.75rem 1rem;
+          background: var(--bg-sidebar);
+          border-bottom: 1px solid var(--border-color);
+        }
+        .classic-topbar .brand {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          font-weight: 700;
+          font-size: 1.125rem;
+          color: var(--text-primary);
+          white-space: nowrap;
+        }
+        .classic-topbar .desktop-links {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+        .classic-topbar .desktop-links a {
+          color: var(--text-secondary);
+          text-decoration: none;
+          padding: 0.4rem 0.6rem;
+          border-radius: 0.375rem;
+        }
+        .classic-topbar .desktop-links a:hover {
+          color: var(--text-primary);
+          background: var(--accent-light);
+        }
+        .classic-burger {
+          display: none;
+          width: 40px;
+          height: 40px;
+          border-radius: 0.5rem;
+          border: 1px solid var(--border-color);
+          background: var(--bg-card);
+          color: var(--text-primary);
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+        .classic-burger span{ display:block; width:20px; height:2px; background: currentColor; position: relative; }
+        .classic-burger span::before, .classic-burger span::after{ content:''; position:absolute; left:0; right:0; height:2px; background: currentColor; }
+        .classic-burger span::before{ top:-6px; }
+        .classic-burger span::after{ top:6px; }
+        
+        /* Mobile Fullscreen Drawer */
+        .classic-mobile-drawer{
+          position: fixed;
+          inset: 0;
+          background: rgba(17,24,39,0.96);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          z-index: 200;
+          display: none;
+          align-items: center;
+          justify-content: center;
+        }
+        .classic-mobile-drawer.active{ display:flex; }
+        .classic-mobile-drawer .drawer-card{
+          width: min(92%, 420px);
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.2);
+          border-radius: 1rem;
+          padding: 1.5rem;
+          color: #fff;
+          position: relative;
+        }
+        .classic-mobile-drawer .close-btn{
+          position: absolute; top: 0.75rem; right: 0.75rem; background: transparent; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;
+        }
+        .classic-mobile-drawer a{
+          display:block; color:#fff; text-decoration:none; padding:0.75rem 1rem; border-radius:0.75rem; margin:0.25rem 0;
+        }
+        .classic-mobile-drawer a:hover{ background: rgba(255,255,255,0.12); }
+        
+        @media (max-width: 1024px){
+          .classic-burger{ display:inline-flex; }
+          .classic-topbar .desktop-links{ display:none; }
+        }
+        
+        @media (max-width: 640px){
+          .classic-topbar{ padding: 0.5rem 0.75rem; }
         }
 
         #classic-portfolio.classic-template[data-theme="light"] {
@@ -626,6 +798,7 @@ const generateStaticHtml = (data) => {
           position: fixed;
           height: 100vh;
           overflow-y: auto;
+          transition: transform 220ms ease;
         }
 
         /* Collapsible sidebar support - container-level state so main shifts correctly */
@@ -667,6 +840,9 @@ const generateStaticHtml = (data) => {
           border: 4px solid var(--accent-color);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
+        .classic-topbar{
+           display: none;
+          }
 
         .classic-main {
           flex: 1;
@@ -786,27 +962,81 @@ const generateStaticHtml = (data) => {
             padding: 1.5rem;
             transform: none !important;
           }
-
+          .classic-topbar{
+           display: none;
+          }
           .classic-main {
             margin-left: 0;
             max-width: 100%;
             padding: 1.5rem;
-          /* Charming mobile layout: make sidebar a top card */
-          .classic-sidebar {
-            position: relative !important;
-            width: 100% !important;
-            height: auto !important;
-            margin-bottom: 1rem !important;
-            border-radius: 12px !important;
+          }
+        }
+
+        /* Mobile layout: hide sidebar; use custom mobile header/footer */
+        @media (max-width: 768px) {
+        .profile-image {
+          width: 70px !important;
+          height: 70px !important;
+          border-radius: 50% !important;
+          }
+          .classic-sidebar { display: none !important; }
+          .classic-main {
+            margin-left: 0 !important;
+            max-width: 100% !important;
             padding: 1rem !important;
-            box-shadow: 0 10px 30px rgba(2,6,23,0.12) !important;
-            background: linear-gradient(180deg, var(--bg-sidebar), rgba(255,255,255,0.02)) !important;
           }
-          .classic-main { margin-left: 0 !important; padding: 0.75rem !important; }
-          .classic-sidebar-toggle { left: auto !important; right: 1rem !important; top: 1rem !important; }
-          .classic-sidebar .profile-image { width: 120px !important; height: 120px !important; }
-          .classic-template .project-card { border-radius: 12px !important; }
+          .classic-template .project-card {
+            border-radius: 16px !important;
+            box-shadow: 0 8px 24px rgba(2,6,23,0.1) !important;
+            background: linear-gradient(135deg, var(--bg-card), rgba(255,255,255,0.02)) !important;
+            border: 1px solid rgba(255,255,255,0.08) !important;
+            animation: fadeInUp 0.6s ease-out both;
+            animation-delay: calc(var(--i, 0) * 0.1s);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
           }
+          .classic-template .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(2,6,23,0.2) !important;
+          }
+          .classic-template h1 { font-size: 1.75rem !important; }
+          .classic-template h2 { font-size: 1.25rem !important; }
+          /* Mobile header */
+          .classic-mobile-header {
+            display: block !important;
+            position: sticky; top: 0; z-index: 150;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+          }
+          .classic-mobile-header .row {
+            display:flex; align-items:center; justify-content:space-between; gap:0.75rem;
+          }
+          .classic-mobile-header .brand {
+            display:flex; flex-direction:column; align-items:center; gap:0.3rem; font-weight:700; color:var(--text-primary);
+            width:100%; text-align:center;
+            margin-top:1.5rem; 
+          }
+          .classic-mobile-header .brand .avatar {
+            width:200px; height:200px; border-radius:50%; object-fit:cover; border:2px solid var(--accent-color); margin:0 auto;
+          }
+          .classic-mobile-header .brand .name { font-size:2rem; }
+          .classic-mobile-header .subtitle { color:var(--text-secondary); font-size:0.9rem; margin-top:0.125rem; text-align:center; }
+          .classic-mobile-header .actions { position:absolute; top:0.5rem; right:0.75rem; display:flex; align-items:center; gap:0.5rem; }
+          .classic-mobile-header .burger-btn {
+            width:44px; height:44px; border-radius:0.5rem; border:1px solid var(--border-color); background:var(--bg-card); color:var(--text-primary); display:flex; align-items:center; justify-content:center; cursor:pointer; margin-top:1.5rem; 
+          }
+          .classic-mobile-header .burger-btn span { display:block; width:20px; height:2px; background: currentColor; position: relative; }
+          .classic-mobile-header .burger-btn span::before, .classic-mobile-header .burger-btn span::after { content:''; position:absolute; left:0; right:0; height:2px; background: currentColor; }
+          .classic-mobile-header .burger-btn span::before { top:-6px; }
+          .classic-mobile-header .burger-btn span::after { top:6px; }
+          /* Mobile footer */
+          .classic-mobile-footer {
+            display:block !important; margin-top:2rem; border-top:1px solid var(--border-color); padding:1rem; color:var(--text-secondary);
+          }
+          .classic-mobile-footer .links { display:flex; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.5rem; }
+          .classic-mobile-footer a { color:var(--text-secondary); text-decoration:none; padding:0.25rem 0.5rem; border-radius:0.375rem; }
+          .classic-mobile-footer a:hover { background: var(--accent-light); color: var(--text-primary); }
+        }
 
           .container {
             flex-direction: column;
@@ -814,6 +1044,11 @@ const generateStaticHtml = (data) => {
         }
 
         @media (max-width: 640px) {
+        .profile-image {
+          width: 70px !important;
+          height: 70px !important;
+          border-radius: 50% !important;
+          }
           .classic-sidebar,
           .classic-main {
             padding: 1rem;
@@ -826,7 +1061,109 @@ const generateStaticHtml = (data) => {
           .projects-grid {
             grid-template-columns: 1fr;
           }
+
+          .classic-sidebar {
+            border-radius: 16px !important;
+            padding: 1.25rem !important;
+            margin-bottom: 1.5rem !important;
+          }
+
+          .classic-template .project-card {
+            border-radius: 12px !important;
+            padding: 1rem !important;
+            margin-bottom: 1rem !important;
+            animation: scaleIn 0.5s ease-out both;
+            animation-delay: calc(var(--i, 0) * 0.05s);
+          }
+
+          .skill-tag {
+            animation: fadeIn 0.4s ease-out both;
+            animation-delay: calc(var(--i, 0) * 0.1s);
+          }
+
+          .contact-links a {
+            animation: slideUp 0.5s ease-out both;
+            animation-delay: calc(var(--i, 0) * 0.1s);
+          }
+
+          /* Enhanced mobile navigation for classic template */
+          .classic-mobile-nav-toggle {
+            display: block !important;
+            position: fixed !important;
+            top: 1rem !important;
+            right: 1rem !important;
+            z-index: 1001 !important;
+            background: var(--accent-color) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 0.75rem !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+          }
+
+          .classic-mobile-nav {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(17, 24, 39, 0.95) !important;
+            backdrop-filter: blur(10px) !important;
+            z-index: 1000 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            transition: all 0.3s ease !important;
+          }
+
+          .classic-mobile-nav.active {
+            opacity: 1 !important;
+            visibility: visible !important;
+          }
+
+          .classic-mobile-nav .nav-content {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(20px) !important;
+            border-radius: 20px !important;
+            padding: 2rem !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            max-width: 300px !important;
+            width: 90% !important;
+            text-align: center !important;
+          }
+
+          .classic-mobile-nav a {
+            display: block !important;
+            color: white !important;
+            text-decoration: none !important;
+            padding: 1rem !important;
+            margin: 0.5rem 0 !important;
+            border-radius: 12px !important;
+            transition: all 0.3s ease !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+          }
+
+          .classic-mobile-nav a:hover {
+            background: rgba(255, 255, 255, 0.2) !important;
+            transform: translateY(-2px) !important;
+          }
+
+          .classic-mobile-nav .close-btn {
+            position: absolute !important;
+            top: 1rem !important;
+            right: 1rem !important;
+            background: none !important;
+            border: none !important;
+            color: white !important;
+            font-size: 1.5rem !important;
+            cursor: pointer !important;
+          }
         }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
       </style>
       <style>
         #classic-portfolio.classic-template { 
@@ -1178,8 +1515,13 @@ const generateStaticHtml = (data) => {
             gap: 1rem !important;
           }
         }
-
+       
         @media (max-width: 640px) {
+        .profile-image {
+          width: 70px !important;
+          height: 70px !important;
+          border-radius: 50% !important;
+          }
           .classic-sidebar,
           .classic-main {
             padding: 1rem !important;
@@ -1202,8 +1544,56 @@ const generateStaticHtml = (data) => {
           }
         }
       </style>
+      <!-- Topbar with burger for mobile -->
+      <div class="classic-topbar">
+        <div class="brand">
+          <span style="display:inline-flex;width:28px;height:28px;border-radius:8px;background:var(--accent-color);opacity:0.85;"></span>
+          ${personal.fullName}
+        </div>
+        <nav class="desktop-links">
+          <a href="#about">About</a>
+          <a href="#experience">Experience</a>
+          <a href="#projects">Projects</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <button class="classic-burger" aria-label="Open menu" onclick="document.querySelector('.classic-mobile-drawer').classList.add('active')">
+          <span></span>
+        </button>
+      </div>
+
+      <!-- Mobile drawer nav -->
+      <div class="classic-mobile-drawer">
+        <div class="drawer-card">
+          <button class="close-btn" aria-label="Close" onclick="this.closest('.classic-mobile-drawer').classList.remove('active')">×</button>
+          <div style="display:flex;flex-direction:column;gap:0.5rem; margin-top:1rem;">
+            <a href="#about" onclick="document.querySelector('.classic-mobile-drawer').classList.remove('active')">About</a>
+            <a href="#experience" onclick="document.querySelector('.classic-mobile-drawer').classList.remove('active')">Experience</a>
+            <a href="#projects" onclick="document.querySelector('.classic-mobile-drawer').classList.remove('active')">Projects</a>
+            <a href="#contact" onclick="document.querySelector('.classic-mobile-drawer').classList.remove('active')">Contact</a>
+            ${cvButtonHtml}
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Header (visible only on mobile) -->
+      <header class="classic-mobile-header" style="display:none; position:relative;">
+        <div class="row" style="flex-direction:column; gap:0.5rem;">
+          <div class="brand">
+            <img class="avatar" src="${personal.profileImage}" alt="${personal.fullName}" onerror="this.onerror=null;this.src='https://placehold.co/160x160/2563eb/ffffff?text=${getInitialsLogo(personal.fullName)}'" />
+            <div class="name">${personal.fullName}</div>
+          </div>
+          <div class="subtitle">${personal.title || ''}</div>
+        </div>
+        <div class="actions">
+          <button class="burger-btn" aria-label="Open menu" onclick="document.querySelector('.classic-mobile-drawer').classList.add('active')">
+            <span></span>
+          </button>
+        </div>
+        ${personal.tagline ? `<div style="margin-top:0.5rem; color:var(--text-secondary); text-align:center;">${personal.tagline}</div>` : ''}
+      </header>
+
       <div class="container">
-        <!-- Sidebar -->
+        <!-- Sidebar (hidden on mobile) -->
         <aside class="classic-sidebar">
           <img src="${personal.profileImage}" alt="${personal.fullName}" class="profile-image" 
                onerror="this.onerror=null;this.src=\`https://placehold.co/180x180/2563eb/ffffff?text=${getInitialsLogo(personal.fullName)}\`"/>
@@ -1356,8 +1746,9 @@ const generateStaticHtml = (data) => {
                  alt="profile"
                  class="profile-image"
                  onerror="this.onerror=null;this.src='https://placehold.co/180x180/60a5fa/1e3a8a?text=${getInitialsLogo(personal.fullName)}'" />
-            <h2>${personal.fullName}</h2>
-            <div style="color: var(--accent-color) !important; font-size: 1.25rem !important; margin-bottom: 1rem !important; font-weight: 500 !important;">${personal.title}</div>
+            <h2 style="margin:0.25rem 0 0.5rem;">${personal.fullName}</h2>
+            <div style="color: var(--accent-color) !important; font-size: 1.05rem !important; margin-bottom: 0.75rem !important; font-weight: 500 !important;">${personal.title}</div>
+            ${personal.tagline ? `<p style="margin-top:0.25rem;">${personal.tagline}</p>` : ''}
             
             <div class="contact-section">
               <h3>Contact</h3>
@@ -1380,39 +1771,34 @@ const generateStaticHtml = (data) => {
                     LinkedIn
                   </a>
                 ` : ''}
+                ${personal.website ? `
+                  <a href="${personal.website}" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    Website
+                  </a>
+                ` : ''}
               </div>
               ${cvButtonHtml}
-            </div>
-            
-            <div class="skills-section">
-              <h3>Core Skills</h3>
-              <div class="skills-list">
-                ${skills.technical.slice(0, 6).map(s => `<span class="tag">${s}</span>`).join('')}
-              </div>
             </div>
           </aside>
 
           <main class="classic-main">
-            <div id="hero" style="height:1px; margin-top:-80px; visibility:hidden;"></div>
             <div id="about" class="classic-section">
               <h1>About Me</h1>
               <p>${(personal.about || '').replace(/\n/g, '<br/>')}</p>
             </div>
 
             <div id="experience" class="classic-section">
-              <h3>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                Professional Experience
-              </h3>
-              <div class="experience-timeline">
+              <h2>Professional Experience</h2>
+              <div class="timeline">
                 ${experience.map(e => `
                   <div class="timeline-item">
-                    <div class="role">${e.title}</div>
+                    <h3 style="margin:0;">${e.title}</h3>
                     <div class="company">${e.company}</div>
                     <div class="year">${e.year}</div>
                     <p class="mt-2">${e.description}</p>
                     ${e.technologies ? `
-                      <div class="skills-list" style="margin-top:0.75rem">
+                      <div class="skills-list" style="margin-top:0.5rem">
                         ${e.technologies.map(tech => `<span class="tag">${tech}</span>`).join('')}
                       </div>
                     ` : ''}
@@ -1421,20 +1807,17 @@ const generateStaticHtml = (data) => {
               </div>
             </div>
 
-            <div id="projects" class="classic-section">
-              <h3>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                Skills & Expertise
-              </h3>
+            <div id="skills" class="classic-section">
+              <h2>Skills & Expertise</h2>
               <div class="skills-container">
                 <div class="skills-group">
-                  <h4>Technical Skills</h4>
+                  <h3>Technical Skills</h3>
                   <div class="skills-list">
                     ${skills.technical.map(s => `<span class="tag">${s}</span>`).join('')}
                   </div>
                 </div>
                 <div class="skills-group">
-                  <h4>Professional Skills</h4>
+                  <h3>Professional Skills</h3>
                   <div class="skills-list">
                     ${skills.soft.map(s => `<span class="tag">${s}</span>`).join('')}
                   </div>
@@ -1443,15 +1826,12 @@ const generateStaticHtml = (data) => {
             </div>
 
             ${projects.length > 0 ? `
-              <div class="classic-section">
-                <h3>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                  Featured Projects
-                </h3>
+              <div id="projects" class="classic-section">
+                <h2>Featured Projects</h2>
                 <div class="projects-grid">
                   ${projects.map(p => `
                     <div class="project-card">
-                      <h4>${p.title}</h4>
+                      <h3 style="margin:0 0 0.25rem;">${p.title}</h3>
                       <p>${p.description}</p>
                     </div>
                   `).join('')}
@@ -1460,21 +1840,33 @@ const generateStaticHtml = (data) => {
             ` : ''}
 
             ${skills.certifications.length > 0 ? `
-              <div class="classic-section">
-                <h3>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                  Certifications
-                </h3>
+              <div id="certifications" class="classic-section">
+                <h2>Certifications</h2>
                 <div class="projects-grid">
                   ${skills.certifications.map(cert => `
                     <div class="project-card">
-                      <h4>${cert.name}</h4>
+                      <h3 style="margin:0 0 0.25rem;">${cert.name}</h3>
                       <p>${cert.issuer} • ${cert.year}</p>
                     </div>
                   `).join('')}
                 </div>
               </div>
             ` : ''}
+
+            <div id="contact" class="classic-section" style="margin-top:2rem;">
+              <h2>Contact</h2>
+              <div class="contact-links">
+                ${personal.email ? `<a href="mailto:${personal.email}">${personal.email}</a>` : ''}
+                ${personal.github ? `<a href="${personal.github}" target="_blank">GitHub</a>` : ''}
+                ${personal.linkedin ? `<a href="${personal.linkedin}" target="_blank">LinkedIn</a>` : ''}
+                ${personal.website ? `<a href="${personal.website}" target="_blank">Website</a>` : ''}
+              </div>
+            </div>
+
+            <!-- Mobile Footer (visible only on mobile) -->
+            <footer class="classic-mobile-footer" style="display:none;">
+              <div style="font-size:0.85rem; text-align:center;">&copy; ${new Date().getFullYear()} ${personal.fullName || personal.name || ''}. All rights reserved.</div>
+            </footer>
           </main>
       </div>
     </div>
