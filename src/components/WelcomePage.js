@@ -6,12 +6,12 @@ import generateStaticHtml from '../utils/generateStaticHtml';
 const WelcomePage = ({ setTemplate, data }) => {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: 'linear-gradient(180deg, #FFFFFF 0%, #F6F1FF 100%)' }}>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
       {/* Animated background elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-violet-400/15 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-96 h-96 bg-fuchsia-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-sky-400/15 rounded-full blur-3xl animate-pulse delay-500"></div>
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
       
@@ -22,7 +22,7 @@ const WelcomePage = ({ setTemplate, data }) => {
           <Sparkles className="w-4 h-4 mr-2" />
           Create stunning portfolios in minutes
         </div>
-        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-fuchsia-500 to-sky-500 tracking-tight mb-6 leading-tight">
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400 tracking-tight mb-6 leading-tight">
           Portfolio
           <br />
           <span className="text-white">Generator</span>
@@ -50,7 +50,7 @@ const WelcomePage = ({ setTemplate, data }) => {
       {/* Templates Section */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">Choose Your Style</h2>
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">Choose Your Style</h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Select from our professionally designed templates, each crafted to showcase your unique professional journey.
           </p>
