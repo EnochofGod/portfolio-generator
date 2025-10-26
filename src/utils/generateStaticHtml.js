@@ -98,8 +98,8 @@ const generateStaticHtml = (data) => {
           }
           .modern-template .profile-image-container img { width:300px !important;height:300px!important; }
           .modern-template .profile-image-container h1 { font-size:3rem !important; }
-          .modern-template .profile-image-container .title-desktop { font-size:1.5rem !important; }
-          .modern-template .profile-image-container .tagline-desktop { font-size:1rem !important; }
+          .modern-template .profile-image-container .title-desktop { font-size:1.7rem !important; }
+          .modern-template .profile-image-container .tagline-desktop { font-size:1.5rem !important; }
         }
         .modern-template .profile-image-container {
           display: flex;
@@ -110,6 +110,13 @@ const generateStaticHtml = (data) => {
           text-align: center;
           margin: 1rem auto; /* requested margin */
         }
+        /* Theme-aware hero text colors */
+        .modern-template[data-theme="dark"] .profile-image-container h1 { color: #60a5fa; }
+        .modern-template[data-theme="light"] .profile-image-container h1 { color: #0ea5e9; }
+        .modern-template[data-theme="dark"] .profile-image-container .title-desktop { color: #cbd5e1; }
+        .modern-template[data-theme="light"] .profile-image-container .title-desktop { color: #334155; }
+        .modern-template[data-theme="dark"] .profile-image-container .tagline-desktop { color: #94a3b8; }
+        .modern-template[data-theme="light"] .profile-image-container .tagline-desktop { color: #475569; }
         /* Keep centered alignment at all sizes */
         @media (min-width: 768px) {
           .modern-template .profile-image-container {
@@ -214,11 +221,26 @@ const generateStaticHtml = (data) => {
           top: 0;
           z-index: 100;
           backdrop-filter: blur(10px);
-          background: rgba(14, 23, 42, 0.8);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
           padding: 1rem 2rem;
           margin: -1rem -2rem 1rem -2rem;
+          transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
         }
+        /* Dark mode nav */
+        .modern-template[data-theme="dark"] .portfolio-nav {
+          background: rgba(14, 23, 42, 0.8);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          color: #e5e7eb;
+        }
+        .modern-template[data-theme="dark"] .portfolio-nav a { color: #e5e7eb; }
+        .modern-template[data-theme="dark"] .portfolio-nav a:hover { color: #93c5fd; }
+        /* Light mode nav */
+        .modern-template[data-theme="light"] .portfolio-nav {
+          background: rgba(255, 255, 255, 0.85);
+          border-bottom: 1px solid rgba(0,0,0,0.08);
+          color: #111827;
+        }
+        .modern-template[data-theme="light"] .portfolio-nav a { color: #1f2937; }
+        .modern-template[data-theme="light"] .portfolio-nav a:hover { color: #0ea5e9; }
         .portfolio-nav .brand { display:flex; align-items:center; gap:0.75rem; }
         .portfolio-nav .links { display:flex; gap:1.5rem; }
         @media (max-width: 1024px) {
@@ -232,6 +254,8 @@ const generateStaticHtml = (data) => {
             margin: -1rem -0.75rem 1rem -0.75rem;
             gap: 0.75rem;
           }
+          .modern-template[data-theme="light"] .portfolio-nav { background: rgba(255,255,255,0.92); }
+          .modern-template[data-theme="dark"] .portfolio-nav { background: rgba(17,24,39,0.9); }
         }
 
         /* Charming mobile improvements for modern template */
