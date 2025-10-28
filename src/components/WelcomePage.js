@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Layers, Sparkles, Star } from 'lucide-react';
 import TemplatePreviewModal from './TemplatePreviewModal';
 import generateStaticHtml from '../utils/generateStaticHtml';
+import defaultData from '../data/defaultData';
 
 const WelcomePage = ({ setTemplate, data }) => {
   const [previewTemplate, setPreviewTemplate] = useState(null);
@@ -120,14 +121,14 @@ const WelcomePage = ({ setTemplate, data }) => {
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-600/10 to-indigo-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-purple-500"></div>
             <div className="relative">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-2">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                     <Layers className="w-5 h-5 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white">Classic Professional</h2>
+                  <h2 className="text-lg sm:text-2xl font-bold text-white">Classic Professional</h2>
                 </div>
-                <span className="px-3 py-1 text-xs font-semibold text-blue-300 bg-blue-500/20 backdrop-blur-sm rounded-full border border-blue-400/30">Light Theme</span>
+                <span className="px-2 py-1 text-xs font-semibold text-blue-300 bg-blue-500/20 backdrop-blur-sm rounded-full border border-blue-400/30 self-start sm:self-auto">Light Theme</span>
               </div>
 
               <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -180,7 +181,7 @@ const WelcomePage = ({ setTemplate, data }) => {
         isOpen={!!previewTemplate}
         onClose={() => setPreviewTemplate(null)}
         template={previewTemplate}
-        generatedCode={previewTemplate && data ? generateStaticHtml({ ...data, template: previewTemplate }) : null}
+        generatedCode={previewTemplate ? generateStaticHtml({ ...defaultData, template: previewTemplate }) : null}
       />
     </div>
   );

@@ -39,10 +39,9 @@ const ConfigForm = ({ data, setData, setView }) => {
     }
   };
 
-  // Initialize form with provided data or default values
+  // Initialize form with empty data for user to fill
   const [formData, setFormData] = useState(() => ({
     ...initializedData,
-    ...data, // Merge in any existing data
   }));
   const MAX_IMAGE_BYTES = 250 * 1024; // 250 KB
   const MAX_CV_BYTES = 2 * 1024 * 1024 * 1024; // 2 MB
